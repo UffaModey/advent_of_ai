@@ -1,0 +1,7 @@
+# No external dependencies required!
+# This fortune teller uses only Python standard library modules:
+# - random (for fortune generation)
+# - sys (for command line arguments)
+# - typing (for type hints)
+
+# Python 3.6+ required for f-string formatting
