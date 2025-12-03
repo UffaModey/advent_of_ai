@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naya and the Heart-Stone</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Magical Winter Particles Background -->
+    <div id="winter-particles"></div>
+    
+    <!-- Main Game Container -->
+    <div class="game-container">
+        <!-- Header with Title and Controls -->
+        <header class="game-header">
+            <h1 class="game-title">
+                <span class="title-main">Naya and the Heart-Stone</span>
+                <span class="title-sub">🌟 An African Winter Adventure 🌟</span>
+            </h1>
+            
+            <div class="controls">
+                <button id="sound-toggle" class="control-btn">
+                    🔊 Sound
+                </button>
+                <button id="restart-btn" class="control-btn">
+                    🔄 Restart
+                </button>
+            </div>
+        </header>
+
+        <!-- Story Display Area -->
+        <main class="story-area">
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <span id="current-step">Step 1</span>
+                <span class="of-ten">of 10</span>
+            </div>
+
+            <!-- Character Portrait -->
+            <div class="character-portrait">
+                <img id="character-image" src="assets/images/naya.webp" alt="Naya" onerror="this.style.display='none'">
+            </div>
+
+            <!-- Story Text -->
+            <div class="story-content">
+                <p id="story-text">
+                    Loading your adventure...
+                </p>
+            </div>
+
+            <!-- Choice Buttons -->
+            <div class="choices-container" id="choices-container">
+                <!-- Dynamic choice buttons will be inserted here -->
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </main>
+
+        <!-- Game Info Footer -->
+        <footer class="game-footer">
+            <p>🌙 Recover the Heart-Stone of Iroko before the 10th moonrise 🌙</p>
+            <p class="save-indicator" id="save-indicator">Game saved automatically</p>
+        </footer>
+    </div>
+
+    <!-- Hidden Audio Elements -->
+    <audio id="ambient-sound" loop preload="auto">
+        <source src="assets/audio/ambient-wind.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="chime-sound" preload="auto">
+        <source src="assets/audio/mystical-chime.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>

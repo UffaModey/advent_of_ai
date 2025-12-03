@@ -1,0 +1,412 @@
+/* Naya and the Heart-Stone - Magical African Winter Theme */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:wght@400;600&display=swap');
+
+/* Root Variables - African Winter Palette */
+:root {
+    --deep-night: #0a0a2a;
+    --forest-blue: #1a237e;
+    --mystic-purple: #4a148c;
+    --golden-glow: #ffd700;
+    --silver-frost: #e8eaf6;
+    --tribal-copper: #d84315;
+    --spirit-cyan: #00bcd4;
+    --earth-brown: #3e2723;
+    
+    /* Gradients */
+    --night-gradient: linear-gradient(135deg, var(--deep-night) 0%, var(--forest-blue) 50%, var(--mystic-purple) 100%);
+    --gold-shimmer: linear-gradient(45deg, transparent 30%, var(--golden-glow) 50%, transparent 70%);
+    
+    /* Typography */
+    --title-font: 'Cinzel', serif;
+    --body-font: 'Crimson Text', serif;
+    
+    /* Spacing */
+    --container-max-width: 800px;
+    --border-radius: 15px;
+    --glow-size: 20px;
+}
+
+/* Global Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--body-font);
+    background: var(--night-gradient);
+    color: var(--silver-frost);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Magical Winter Particles Background */
+#winter-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#winter-particles::before,
+#winter-particles::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, var(--golden-glow), transparent),
+        radial-gradient(2px 2px at 40px 70px, var(--spirit-cyan), transparent),
+        radial-gradient(1px 1px at 90px 40px, var(--silver-frost), transparent),
+        radial-gradient(1px 1px at 130px 80px, var(--golden-glow), transparent),
+        radial-gradient(2px 2px at 160px 30px, var(--spirit-cyan), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: snowfall 20s linear infinite;
+    opacity: 0.6;
+}
+
+#winter-particles::after {
+    animation-delay: -10s;
+    animation-duration: 25s;
+    opacity: 0.4;
+}
+
+@keyframes snowfall {
+    from { transform: translateY(-100px); }
+    to { transform: translateY(100vh); }
+}
+
+/* Main Game Container */
+.game-container {
+    position: relative;
+    z-index: 2;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+.game-header {
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.game-title {
+    font-family: var(--title-font);
+    margin-bottom: 20px;
+}
+
+.title-main {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--golden-glow);
+    text-shadow: 
+        0 0 10px var(--golden-glow),
+        0 0 20px var(--golden-glow),
+        0 0 30px var(--golden-glow);
+    margin-bottom: 10px;
+}
+
+.title-sub {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--spirit-cyan);
+    text-shadow: 0 0 10px var(--spirit-cyan);
+}
+
+.controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.control-btn {
+    background: linear-gradient(135deg, var(--mystic-purple), var(--forest-blue));
+    border: 2px solid var(--golden-glow);
+    color: var(--silver-frost);
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    font-family: var(--body-font);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.control-btn::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--gold-shimmer);
+    transition: left 0.5s;
+}
+
+.control-btn:hover::before {
+    left: 100%;
+}
+
+.control-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 5px 15px rgba(255, 215, 0, 0.3),
+        0 0 20px var(--golden-glow);
+}
+
+/* Story Area */
+.story-area {
+    background: rgba(26, 35, 126, 0.3);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--golden-glow);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    margin-bottom: 20px;
+    flex-grow: 1;
+    position: relative;
+    box-shadow: 
+        inset 0 0 20px rgba(255, 215, 0, 0.1),
+        0 0 30px rgba(0, 188, 212, 0.2);
+}
+
+.step-indicator {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: var(--title-font);
+    font-size: 1.1rem;
+}
+
+#current-step {
+    color: var(--golden-glow);
+    font-weight: 600;
+}
+
+.of-ten {
+    color: var(--spirit-cyan);
+}
+
+.character-portrait {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#character-image {
+    max-width: 150px;
+    height: auto;
+    border-radius: 50%;
+    border: 3px solid var(--golden-glow);
+    box-shadow: 0 0 20px var(--golden-glow);
+}
+
+.story-content {
+    margin-bottom: 30px;
+}
+
+#story-text {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    text-align: center;
+    color: var(--silver-frost);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    margin-bottom: 20px;
+}
+
+/* Choice Buttons */
+.choices-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.choice-btn {
+    background: linear-gradient(135deg, var(--earth-brown), var(--tribal-copper));
+    border: 2px solid var(--golden-glow);
+    color: var(--silver-frost);
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    font-family: var(--body-font);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+}
+
+.choice-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--gold-shimmer);
+    transition: left 0.6s;
+}
+
+.choice-btn:hover::before {
+    left: 100%;
+}
+
+.choice-btn:hover {
+    transform: translateX(5px);
+    box-shadow: 
+        0 5px 20px rgba(255, 215, 0, 0.4),
+        0 0 25px var(--spirit-cyan);
+    border-color: var(--spirit-cyan);
+}
+
+.choice-btn:active {
+    transform: translateX(5px) scale(0.98);
+}
+
+.choice-icon {
+    margin-right: 10px;
+    font-size: 1.3rem;
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(26, 35, 126, 0.5);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--golden-glow);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--golden-glow), var(--spirit-cyan));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px var(--golden-glow);
+}
+
+/* Footer */
+.game-footer {
+    text-align: center;
+    padding: 20px 0;
+    font-family: var(--title-font);
+    color: var(--spirit-cyan);
+}
+
+.save-indicator {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .game-container {
+        padding: 15px;
+    }
+    
+    .title-main {
+        font-size: 2rem;
+    }
+    
+    .title-sub {
+        font-size: 1rem;
+    }
+    
+    #story-text {
+        font-size: 1.1rem;
+    }
+    
+    .choice-btn {
+        padding: 12px 15px;
+        font-size: 1rem;
+    }
+    
+    .controls {
+        gap: 10px;
+    }
+    
+    .control-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .title-main {
+        font-size: 1.8rem;
+    }
+    
+    .story-area {
+        padding: 20px;
+    }
+    
+    #story-text {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    
+    .choice-btn {
+        padding: 10px 12px;
+    }
+}
+
+/* Special Animations for Story Transitions */
+.fade-in {
+    animation: fadeIn 0.8s ease-in;
+}
+
+.fade-out {
+    animation: fadeOut 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-20px); }
+}
+
+/* Tribal Pattern Borders */
+.story-area::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        var(--golden-glow) 0%, 
+        var(--spirit-cyan) 25%, 
+        var(--tribal-copper) 50%, 
+        var(--spirit-cyan) 75%, 
+        var(--golden-glow) 100%);
+    border-radius: var(--border-radius);
+    z-index: -1;
+    animation: borderGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes borderGlow {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+}
