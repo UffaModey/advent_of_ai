@@ -54,11 +54,11 @@
 
 # 404 page (optional)
 # If you create a 404.html file, Netlify will use it for missing pages
+# SPA fallback - redirect all unknown routes to index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  conditions = {Role = ["admin"]}
 
 # Prerender for better SEO (optional)
 # [build.processing]
