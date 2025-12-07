@@ -1,0 +1,76 @@
+[build]
+  # Publish directory - the current directory since it's a static site
+  publish = "."
+  
+  # No build command needed for static HTML/CSS site
+  command = ""
+
+[build.environment]
+  # Set Node.js version (optional, for any potential build tools)
+  NODE_VERSION = "18"
+
+# Headers for better performance and security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Security headers
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+    # Performance headers
+    Cache-Control = "public, max-age=31536000"
+
+# Specific caching for images
+[[headers]]
+  for = "/assets/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# HTML files should not be cached as aggressively
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# CSS files caching
+[[headers]]
+  for = "/assets/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Redirects (if needed in the future)
+# Uncomment and modify if you need redirects
+# [[redirects]]
+#   from = "/old-page"
+#   to = "/new-page"
+#   status = 301
+
+# Form handling (if you add contact forms later)
+# This enables Netlify's built-in form handling
+# Just add netlify attribute to your form tags
+# Example: <form name="contact" netlify>
+
+# 404 page (optional)
+# If you create a 404.html file, Netlify will use it for missing pages
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  conditions = {Role = ["admin"]}
+
+# Prerender for better SEO (optional)
+# [build.processing]
+#   skip_processing = false
+
+# Environment-specific settings
+[context.production.environment]
+  HUGO_ENV = "production"
+
+[context.deploy-preview.environment]
+  HUGO_ENV = "staging"
+
+# Plugin configurations (optional)
+# [[plugins]]
+#   package = "@netlify/plugin-sitemap"
