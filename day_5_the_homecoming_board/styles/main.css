@@ -1,0 +1,874 @@
+/* ===== WINTER FESTIVAL FLIGHT TRACKER STYLES ===== */
+
+/* CSS Variables for Winter Theme */
+:root {
+    --winter-blue: #1e3a8a;
+    --winter-blue-light: #3b82f6;
+    --winter-blue-dark: #1e40af;
+    --ice-white: #f8fafc;
+    --snow-white: #ffffff;
+    --frost-gray: #f1f5f9;
+    --silver: #94a3b8;
+    --gold: #f59e0b;
+    --gold-light: #fbbf24;
+    
+    /* Gradients */
+    --winter-gradient: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+    --frost-gradient: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+    --glass-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    
+    /* Animation timing */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    /* Typography */
+    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ===== RESET & BASE STYLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background: var(--winter-gradient);
+    color: var(--snow-white);
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+}
+
+/* ===== SNOW PARTICLES BACKGROUND ===== */
+#snow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.snowflake {
+    position: absolute;
+    top: -10px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1em;
+    animation: snowfall linear infinite;
+    user-select: none;
+}
+
+@keyframes snowfall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* ===== CAMERA & HAND TRACKING ===== */
+#camera-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    height: 240px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    z-index: 100;
+    transition: var(--transition-smooth);
+    opacity: 0.8;
+}
+
+#camera-container:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+#camera-container.hidden {
+    transform: translateX(100%) scale(0.8);
+    opacity: 0;
+}
+
+#input-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* Mirror the video */
+}
+
+#output-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scaleX(-1); /* Mirror the canvas */
+}
+
+#toggle-camera {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    transition: var(--transition-smooth);
+}
+
+#toggle-camera:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+/* ===== GESTURE INDICATOR ===== */
+#gesture-indicator {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background: var(--frost-gradient);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 15px 25px;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: var(--transition-bounce);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+#gesture-indicator.recognized {
+    transform: scale(1.1);
+    background: var(--gold);
+    color: var(--winter-blue-dark);
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
+}
+
+#gesture-icon {
+    font-size: 24px;
+    animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+#gesture-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--winter-blue-dark);
+}
+
+/* ===== MAIN APPLICATION ===== */
+#app {
+    position: relative;
+    z-index: 10;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== HEADER ===== */
+#main-header {
+    text-align: center;
+    padding: 40px 20px 30px;
+    background: var(--frost-gradient);
+    backdrop-filter: blur(20px);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+#main-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+}
+
+#main-header p {
+    font-size: 1.1rem;
+    color: var(--winter-blue-dark);
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+#current-airport {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 12px 20px;
+    border-radius: 25px;
+    color: var(--winter-blue-dark);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#airport-code {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--winter-blue);
+}
+
+#airport-name {
+    font-weight: 500;
+}
+
+/* ===== SCREEN MANAGEMENT ===== */
+.screen {
+    display: none;
+    flex: 1;
+    overflow: hidden;
+}
+
+.screen.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== LOADING SCREEN ===== */
+#loading-screen {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.loading-content {
+    background: var(--frost-gradient);
+    backdrop-filter: blur(20px);
+    padding: 60px 80px;
+    border-radius: 30px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.loading-content .snowflake {
+    position: static;
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.loading-content p {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 30px;
+    color: var(--winter-blue-dark);
+}
+
+.loading-bar {
+    width: 300px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.loading-progress {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 3px;
+    animation: loading 2s ease-in-out infinite;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+@keyframes loading {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+/* ===== MAIN SCREEN - FLIGHT TABS ===== */
+#flight-tabs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 30px;
+    background: var(--frost-gradient);
+    backdrop-filter: blur(20px);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.tab-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: var(--ice-white);
+    padding: 15px 30px;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(10px);
+}
+
+.tab-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.tab-button.active {
+    background: var(--gold);
+    color: var(--winter-blue-dark);
+    border-color: var(--gold);
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.4);
+}
+
+.refresh-button {
+    background: rgba(96, 165, 250, 0.2);
+    border: 2px solid rgba(96, 165, 250, 0.5);
+    color: #60a5fa;
+}
+
+.refresh-button:hover {
+    background: rgba(96, 165, 250, 0.3);
+    color: #3b82f6;
+}
+
+/* ===== FLIGHT LIST ===== */
+#flight-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    max-height: calc(100vh - 400px);
+}
+
+.flight-card {
+    background: var(--frost-gradient);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 25px;
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.flight-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: var(--transition-smooth);
+}
+
+.flight-card:hover::before {
+    transform: scaleX(1);
+}
+
+.flight-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    border-color: rgba(245, 158, 11, 0.5);
+}
+
+.flight-card.selected {
+    background: var(--glass-gradient);
+    border-color: var(--gold);
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.3);
+}
+
+.flight-card.selected::before {
+    transform: scaleX(1);
+}
+
+.flight-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.flight-number {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.airline {
+    font-size: 1rem;
+    color: var(--winter-blue-dark);
+    font-weight: 500;
+}
+
+.status {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status.on-time {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.status.delayed {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.status.boarding {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--gold);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.route {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.route-airport {
+    flex: 1;
+    text-align: center;
+}
+
+.route-code {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--winter-blue-dark);
+    margin-bottom: 5px;
+}
+
+.route-name {
+    font-size: 0.9rem;
+    color: var(--silver);
+}
+
+.route-arrow {
+    font-size: 1.5rem;
+    color: var(--gold);
+    animation: fly 3s ease-in-out infinite;
+}
+
+@keyframes fly {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+}
+
+.flight-times {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    font-size: 0.95rem;
+}
+
+.time-info {
+    color: var(--winter-blue-dark);
+}
+
+.time-label {
+    font-weight: 500;
+    margin-bottom: 3px;
+}
+
+.time-value {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+/* ===== NAVIGATION HINT ===== */
+#navigation-hint {
+    background: var(--frost-gradient);
+    backdrop-filter: blur(20px);
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    text-align: center;
+}
+
+#navigation-hint p {
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: var(--winter-blue-dark);
+}
+
+.gesture-hints {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.gesture-hints span {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ice-white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ===== FLIGHT DETAIL SCREEN ===== */
+#detail-screen {
+    padding: 40px;
+    justify-content: center;
+    align-items: center;
+}
+
+#flight-detail-container {
+    background: var(--frost-gradient);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    padding: 40px;
+    max-width: 800px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: var(--ice-white);
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+#flight-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+#detail-flight-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 10px;
+}
+
+#detail-airline {
+    font-size: 1.3rem;
+    color: var(--winter-blue-dark);
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+#detail-status {
+    display: inline-block;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+#flight-route {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.route-point {
+    text-align: center;
+    flex: 1;
+}
+
+.route-point .airport-code {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--winter-blue-dark);
+    margin-bottom: 10px;
+}
+
+.route-point .airport-name {
+    font-size: 1rem;
+    color: var(--silver);
+    margin-bottom: 15px;
+}
+
+.route-point .time {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.route-arrow {
+    font-size: 3rem;
+    color: var(--gold);
+    margin: 0 30px;
+}
+
+#flight-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-row .label {
+    font-weight: 600;
+    color: var(--silver);
+}
+
+.info-row span:last-child {
+    font-weight: 700;
+    color: var(--winter-blue-dark);
+    font-size: 1.1rem;
+}
+
+/* ===== AIRPORT SELECTION SCREEN ===== */
+#airport-screen {
+    padding: 40px;
+    justify-content: center;
+    align-items: center;
+}
+
+#airport-selector {
+    background: var(--frost-gradient);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    padding: 40px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+#airport-selector h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 40px;
+}
+
+#airport-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.airport-option {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    text-align: left;
+}
+
+.airport-option:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(245, 158, 11, 0.5);
+    transform: translateY(-2px);
+}
+
+.airport-option.active {
+    background: var(--glass-gradient);
+    border-color: var(--gold);
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);
+}
+
+.airport-option .airport-code {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 5px;
+}
+
+.airport-option .airport-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--winter-blue-dark);
+    margin-bottom: 5px;
+}
+
+.airport-option .airport-location {
+    font-size: 0.95rem;
+    color: var(--silver);
+}
+
+.confirm-button {
+    background: var(--gold);
+    border: 2px solid var(--gold);
+    color: var(--winter-blue-dark);
+    padding: 15px 30px;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+}
+
+.confirm-button:hover {
+    background: var(--gold-light);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(245, 158, 11, 0.4);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    #main-header h1 {
+        font-size: 2rem;
+    }
+    
+    #camera-container {
+        width: 240px;
+        height: 180px;
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    #flight-list {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+    
+    #flight-tabs {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .gesture-hints {
+        gap: 15px;
+    }
+    
+    .gesture-hints span {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+    
+    #flight-route {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .route-arrow {
+        transform: rotate(90deg);
+        margin: 10px 0;
+    }
+    
+    #flight-info {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.animate-slideInUp {
+    animation: slideInUp 0.5s ease-out forwards;
+}
+
+.animate-slideInDown {
+    animation: slideInDown 0.5s ease-out forwards;
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* ===== SCROLLBAR STYLING ===== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(245, 158, 11, 0.5);
+    border-radius: 10px;
+    transition: var(--transition-smooth);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(245, 158, 11, 0.7);
+}

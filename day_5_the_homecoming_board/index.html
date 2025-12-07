@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Homecoming Board - Winter Festival Flight Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+</head>
+<body>
+    <!-- Snow particles background -->
+    <div id="snow-container"></div>
+
+    <!-- Hand tracking video -->
+    <div id="camera-container">
+        <video id="input-video" width="320" height="240" autoplay muted playsinline></video>
+        <canvas id="output-canvas" width="320" height="240"></canvas>
+        <button id="toggle-camera" aria-label="Toggle camera view">👁️</button>
+    </div>
+
+    <!-- Gesture feedback indicator -->
+    <div id="gesture-indicator">
+        <div id="gesture-icon">✋</div>
+        <div id="gesture-name">Ready</div>
+    </div>
+
+    <!-- Main application container -->
+    <div id="app">
+        <!-- Header -->
+        <header id="main-header">
+            <h1>✈️ The Homecoming Board</h1>
+            <p>Winter Festival Edition</p>
+            <div id="current-airport">
+                <span id="airport-code">JFK</span>
+                <span id="airport-name">John F. Kennedy International</span>
+            </div>
+        </header>
+
+        <!-- Loading screen -->
+        <div id="loading-screen" class="screen">
+            <div class="loading-content">
+                <div class="snowflake">❄️</div>
+                <p>Connecting to flight data...</p>
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main flight display -->
+        <div id="main-screen" class="screen">
+            <!-- Tab navigation -->
+            <nav id="flight-tabs">
+                <button id="arrivals-tab" class="tab-button active" data-type="arrivals">
+                    🛬 Arrivals
+                </button>
+                <button id="departures-tab" class="tab-button" data-type="departures">
+                    🛫 Departures
+                </button>
+                <button id="refresh-btn" class="refresh-button">
+                    🔄 Refresh
+                </button>
+            </nav>
+
+            <!-- Flight list -->
+            <div id="flight-list" class="flight-list">
+                <!-- Flight cards will be populated here -->
+            </div>
+
+            <!-- Navigation hint -->
+            <div id="navigation-hint">
+                <p>Use hand gestures to navigate:</p>
+                <div class="gesture-hints">
+                    <span>🤙 Load Arrivals</span>
+                    <span>👌 Load Departures</span>
+                    <span>🖐️ Navigate</span>
+                    <span>✊ Select Flight</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flight detail view -->
+        <div id="detail-screen" class="screen">
+            <div id="flight-detail-container">
+                <button id="back-button" class="back-button">🖖 Back to Main</button>
+                
+                <div id="flight-detail-content">
+                    <div id="flight-header">
+                        <h2 id="detail-flight-number">AA123</h2>
+                        <div id="detail-airline">American Airlines</div>
+                        <div id="detail-status" class="status">On Time</div>
+                    </div>
+
+                    <div id="flight-route">
+                        <div class="route-point">
+                            <div class="airport-code" id="detail-origin">LAX</div>
+                            <div class="airport-name">Los Angeles International</div>
+                            <div class="time" id="detail-departure-time">14:30</div>
+                        </div>
+                        <div class="route-arrow">✈️</div>
+                        <div class="route-point">
+                            <div class="airport-code" id="detail-destination">JFK</div>
+                            <div class="airport-name">John F. Kennedy International</div>
+                            <div class="time" id="detail-arrival-time">22:45</div>
+                        </div>
+                    </div>
+
+                    <div id="flight-info">
+                        <div class="info-row">
+                            <span class="label">Gate:</span>
+                            <span id="detail-gate">B12</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Terminal:</span>
+                            <span id="detail-terminal">2</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Aircraft:</span>
+                            <span id="detail-aircraft">Boeing 737-800</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Flight Duration:</span>
+                            <span id="detail-duration">5h 15m</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Airport selection screen -->
+        <div id="airport-screen" class="screen">
+            <div id="airport-selector">
+                <h2>🛫 Select Airport</h2>
+                <div id="airport-list">
+                    <div class="airport-option active" data-code="JFK" data-name="John F. Kennedy International">
+                        <div class="airport-code">JFK</div>
+                        <div class="airport-name">John F. Kennedy International</div>
+                        <div class="airport-location">New York, NY</div>
+                    </div>
+                    <div class="airport-option" data-code="LAX" data-name="Los Angeles International">
+                        <div class="airport-code">LAX</div>
+                        <div class="airport-name">Los Angeles International</div>
+                        <div class="airport-location">Los Angeles, CA</div>
+                    </div>
+                    <div class="airport-option" data-code="ORD" data-name="O'Hare International">
+                        <div class="airport-code">ORD</div>
+                        <div class="airport-name">O'Hare International</div>
+                        <div class="airport-location">Chicago, IL</div>
+                    </div>
+                    <div class="airport-option" data-code="ATL" data-name="Hartsfield-Jackson Atlanta International">
+                        <div class="airport-code">ATL</div>
+                        <div class="airport-name">Hartsfield-Jackson Atlanta International</div>
+                        <div class="airport-location">Atlanta, GA</div>
+                    </div>
+                    <div class="airport-option" data-code="DFW" data-name="Dallas/Fort Worth International">
+                        <div class="airport-code">DFW</div>
+                        <div class="airport-name">Dallas/Fort Worth International</div>
+                        <div class="airport-location">Dallas, TX</div>
+                    </div>
+                </div>
+                <button id="confirm-airport" class="confirm-button">✊ Select Airport</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript modules -->
+    <script src="js/utils/cache.js"></script>
+    <script src="js/utils/api.js"></script>
+    <script src="js/gesture/detector.js"></script>
+    <script src="js/gesture/recognizer.js"></script>
+    <script src="js/ui/animations.js"></script>
+    <script src="js/ui/components.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
