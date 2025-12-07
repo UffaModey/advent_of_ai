@@ -5,7 +5,7 @@
 
 class FlightAPI {
     constructor() {
-        this.apiKey = '76fc5e8a851b31f42912d13601e02630';
+        this.apiKey = '';
         this.baseURL = 'https://api.aviationstack.com/v1';
         
         // Use CORS proxy for browser requests
