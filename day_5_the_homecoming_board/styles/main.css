@@ -177,6 +177,146 @@ body {
     color: var(--winter-blue-dark);
 }
 
+/* ===== PERMANENT GESTURE CONTROLS PANEL ===== */
+#gesture-controls-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+    border-bottom: 3px solid rgba(30, 58, 138, 0.8);
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px);
+    color: var(--winter-blue-dark);
+    transition: var(--transition-smooth);
+}
+
+#gesture-controls-panel.collapsed .gesture-controls-grid {
+    display: none;
+}
+
+.gesture-controls-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 25px;
+    background: rgba(30, 58, 138, 0.1);
+    border-bottom: 2px solid rgba(30, 58, 138, 0.2);
+}
+
+.gesture-controls-header h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--winter-blue-dark);
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.3);
+}
+
+.controls-toggle {
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: var(--transition-smooth);
+    user-select: none;
+}
+
+.controls-toggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.gesture-controls-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    padding: 1px;
+    background: rgba(30, 58, 138, 0.3);
+}
+
+.gesture-control {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: var(--transition-smooth);
+    border-radius: 0;
+    backdrop-filter: blur(10px);
+}
+
+.gesture-control:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.gesture-control:first-child {
+    border-top-left-radius: 0;
+}
+
+.gesture-control:last-child {
+    border-bottom-right-radius: 0;
+}
+
+.gesture-emoji {
+    font-size: 1.8rem;
+    min-width: 32px;
+    text-align: center;
+    animation: gesture-pulse 3s ease-in-out infinite;
+}
+
+@keyframes gesture-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.gesture-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.gesture-label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--winter-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.gesture-action {
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--winter-blue-dark);
+    opacity: 0.8;
+}
+
+/* Highlight active gesture */
+.gesture-control.active {
+    background: var(--winter-blue-light);
+    color: white;
+}
+
+.gesture-control.active .gesture-label,
+.gesture-control.active .gesture-action {
+    color: white;
+}
+
+.gesture-control.active .gesture-emoji {
+    animation: gesture-active 0.5s ease-in-out;
+}
+
+@keyframes gesture-active {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+}
+
 /* ===== MAIN APPLICATION ===== */
 #app {
     position: relative;
@@ -184,6 +324,8 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
+    /* Account for gesture controls panel */
+    padding-top: 120px;
 }
 
 /* ===== HEADER ===== */
@@ -704,6 +846,11 @@ body {
     flex-direction: column;
     gap: 15px;
     margin-bottom: 40px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(245, 158, 11, 0.5) rgba(255, 255, 255, 0.1);
 }
 
 .airport-option {

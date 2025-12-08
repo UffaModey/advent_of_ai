@@ -150,6 +150,12 @@ class HandDetector {
         this.canvasCtx.save();
         this.canvasCtx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
 
+        // Mirror the canvas context to match the mirrored video
+        if (this.config.selfieMode) {
+            this.canvasCtx.translate(this.canvasElement.width, 0);
+            this.canvasCtx.scale(-1, 1);
+        }
+
         // Draw the hand landmarks if detected
         if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
             for (const landmarks of results.multiHandLandmarks) {

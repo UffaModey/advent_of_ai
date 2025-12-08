@@ -19,7 +19,7 @@ class FlightTrackerApp {
         this.currentScreen = 'loading-screen';
         this.isInitialized = false;
         this.isCameraEnabled = true;
-        this.currentAirport = 'JFK';
+        this.currentAirport = null; // Will be set from API
         this.currentFlightType = 'arrivals';
         
         // Gesture action mapping
@@ -113,6 +113,7 @@ class FlightTrackerApp {
         document.addEventListener('show-flight-detail', this.onShowFlightDetail.bind(this));
         document.addEventListener('airport-changed', this.onAirportChanged.bind(this));
         document.addEventListener('airport-selection-confirmed', this.onAirportConfirmed.bind(this));
+        document.addEventListener('airport-navigation-change', this.onAirportNavigationChange.bind(this));
         
         // Camera toggle button
         const toggleCameraBtn = document.getElementById('toggle-camera');
@@ -130,6 +131,12 @@ class FlightTrackerApp {
         const confirmAirportBtn = document.getElementById('confirm-airport');
         if (confirmAirportBtn) {
             confirmAirportBtn.addEventListener('click', this.confirmAirportSelection.bind(this));
+        }
+        
+        // Gesture controls toggle
+        const controlsToggle = document.getElementById('controls-toggle');
+        if (controlsToggle) {
+            controlsToggle.addEventListener('click', this.toggleGestureControls.bind(this));
         }
         
         console.log('✅ Event listeners setup complete');
@@ -172,7 +179,14 @@ class FlightTrackerApp {
         console.log('🏢 Setting up initial data...');
         
         // Get available airports
-        const airports = this.flightAPI.getAvailableAirports();
+        const airports = await this.flightAPI.getAvailableAirports();
+        
+        // Set the first airport as current if not already set
+        if (!this.currentAirport && airports.length > 0) {
+            this.currentAirport = airports[0].code;
+            console.log(`🛫 Default airport set to: ${this.currentAirport}`);
+        }
+        
         this.uiComponents.setupAirportSelection(airports, this.currentAirport);
         
         // Load initial flight data
@@ -373,7 +387,7 @@ class FlightTrackerApp {
         this.animationManager.showNotification('Refreshing flight data...', 'info', 1000);
         
         // Clear cache for current data
-        const cacheKey = window.FlightCache.constructor.generateFlightKey(
+        const cacheKey = Cache.generateFlightKey(
             this.currentAirport,
             this.currentFlightType
         );
@@ -495,6 +509,25 @@ class FlightTrackerApp {
     }
 
     /**
+     * Toggle gesture controls panel
+     */
+    toggleGestureControls() {
+        const controlsPanel = document.getElementById('gesture-controls-panel');
+        const controlsToggle = document.getElementById('controls-toggle');
+        
+        if (controlsPanel) {
+            const isCollapsed = controlsPanel.classList.toggle('collapsed');
+            
+            if (controlsToggle) {
+                controlsToggle.textContent = isCollapsed ? '👁️' : '📝';
+                controlsToggle.title = isCollapsed ? 'Show gesture controls' : 'Hide gesture controls';
+            }
+            
+            console.log(`🎛️ Gesture controls ${isCollapsed ? 'collapsed' : 'expanded'}`);
+        }
+    }
+
+    /**
      * Handle flight type change event
      * @param {CustomEvent} event - Event with flight type details
      */
@@ -512,7 +545,7 @@ class FlightTrackerApp {
         const { type, airport } = event.detail;
         
         // Clear cache and reload
-        const cacheKey = window.FlightCache.constructor.generateFlightKey(airport, type);
+        const cacheKey = Cache.generateFlightKey(airport, type);
         window.FlightCache.delete(cacheKey);
         
         await this.loadFlightData(airport, type);
@@ -567,6 +600,23 @@ class FlightTrackerApp {
         this.animationManager.showNotification(
             `Switched to ${airportCode}`,
             'success'
+        );
+    }
+
+    /**
+     * Handle airport navigation change event (for visual feedback)
+     * @param {CustomEvent} event - Event with navigation details
+     */
+    onAirportNavigationChange(event) {
+        const { airportCode, airportName, direction } = event.detail;
+        
+        console.log(`🛫 Airport navigation: ${airportCode} - ${airportName} (${direction})`);
+        
+        // Show feedback notification
+        this.animationManager.showNotification(
+            `🖐️ ${airportCode} - ${airportName}`,
+            'info',
+            1500
         );
     }
 

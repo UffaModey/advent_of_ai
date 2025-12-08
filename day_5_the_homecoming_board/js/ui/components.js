@@ -8,7 +8,7 @@ class UIComponents {
         this.currentFlights = [];
         this.selectedFlightIndex = -1;
         this.currentFlightType = 'arrivals';
-        this.currentAirport = 'JFK';
+        this.currentAirport = null; // Will be set dynamically
         
         // DOM elements
         this.flightList = null;
@@ -60,21 +60,30 @@ class UIComponents {
      * Set up event listeners for UI interactions
      */
     setupEventListeners() {
-        // Tab buttons
+        // Tab buttons with improved responsiveness
         const arrivalsTab = document.getElementById('arrivals-tab');
         const departuresTab = document.getElementById('departures-tab');
         const refreshBtn = document.getElementById('refresh-btn');
         
         if (arrivalsTab) {
-            arrivalsTab.addEventListener('click', () => this.switchFlightType('arrivals'));
+            arrivalsTab.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.switchFlightType('arrivals');
+            });
         }
         
         if (departuresTab) {
-            departuresTab.addEventListener('click', () => this.switchFlightType('departures'));
+            departuresTab.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.switchFlightType('departures');
+            });
         }
         
         if (refreshBtn) {
-            refreshBtn.addEventListener('click', () => this.refreshFlightData());
+            refreshBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.refreshFlightData();
+            });
         }
         
         // Airport selection
@@ -82,6 +91,7 @@ class UIComponents {
             this.airportList.addEventListener('click', (e) => {
                 const airportOption = e.target.closest('.airport-option');
                 if (airportOption) {
+                    e.preventDefault();
                     this.selectAirport(airportOption);
                 }
             });
@@ -92,6 +102,7 @@ class UIComponents {
             this.flightList.addEventListener('click', (e) => {
                 const flightCard = e.target.closest('.flight-card');
                 if (flightCard) {
+                    e.preventDefault();
                     const flightIndex = Array.from(this.flightList.children).indexOf(flightCard);
                     this.selectFlight(flightIndex);
                 }
@@ -274,7 +285,13 @@ class UIComponents {
         if (this.currentFlightType === type) return;
         
         console.log(`🔄 Switching to ${type}`);
+        
+        // Immediate visual feedback
+        this.updateTabButtons(type);
+        this.showLoadingState();
+        
         this.currentFlightType = type;
+        this.selectedFlightIndex = -1;
         
         // Emit event for app to handle data loading
         document.dispatchEvent(new CustomEvent('flight-type-changed', {
@@ -455,23 +472,73 @@ class UIComponents {
      */
     navigateAirports(direction) {
         const options = this.airportList.querySelectorAll('.airport-option');
-        if (options.length === 0) return;
+        if (options.length === 0) {
+            console.log('🔍 No airport options found for navigation');
+            return;
+        }
+        
+        console.log(`🛫 Navigating airports ${direction} from index ${this.selectedAirportIndex} of ${options.length}`);
+        
+        // Ensure selectedAirportIndex is valid
+        if (this.selectedAirportIndex < 0 || this.selectedAirportIndex >= options.length) {
+            // Find the current active airport or default to first
+            const activeOption = this.airportList.querySelector('.airport-option.active');
+            if (activeOption) {
+                this.selectedAirportIndex = Array.from(options).indexOf(activeOption);
+            } else {
+                this.selectedAirportIndex = 0;
+            }
+        }
         
         const increment = direction === 'down' ? 1 : -1;
-        const newIndex = Math.max(0, Math.min(
-            options.length - 1,
-            this.selectedAirportIndex + increment
-        ));
+        let newIndex = this.selectedAirportIndex + increment;
+        
+        // Implement circular navigation
+        if (newIndex < 0) {
+            newIndex = options.length - 1; // Go to last item
+        } else if (newIndex >= options.length) {
+            newIndex = 0; // Go to first item
+        }
         
         if (newIndex !== this.selectedAirportIndex) {
             // Update visual selection
-            options[this.selectedAirportIndex]?.classList.remove('active');
+            console.log(`✈️ Moving from airport index ${this.selectedAirportIndex} to ${newIndex}`);
+            
+            // Remove previous selection
+            options.forEach(option => option.classList.remove('active'));
+            
+            // Add new selection
             options[newIndex]?.classList.add('active');
             
             this.selectedAirportIndex = newIndex;
             
-            // Scroll into view
-            options[newIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Scroll into view with better positioning
+            options[newIndex]?.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'nearest',
+                inline: 'nearest'
+            });
+            
+            // Visual feedback - pulse the selected option
+            if (options[newIndex]) {
+                this.pulseElement(options[newIndex]);
+            }
+            
+            // Get airport details for feedback
+            const airportCode = options[newIndex]?.dataset.code;
+            const airportName = options[newIndex]?.dataset.name;
+            
+            console.log(`🎯 Selected airport: ${airportCode} - ${airportName}`);
+            
+            // Emit selection event for potential feedback
+            document.dispatchEvent(new CustomEvent('airport-navigation-change', {
+                detail: { 
+                    newIndex,
+                    airportCode,
+                    airportName,
+                    direction
+                }
+            }));
         }
     }
 
@@ -658,6 +725,86 @@ class UIComponents {
         }
         this.currentFlights = [];
         this.selectedFlightIndex = -1;
+    }
+
+    /**
+     * Clear flight card selections
+     */
+    clearCardSelections() {
+        this.selectedFlightIndex = -1;
+        this.updateFlightSelection();
+    }
+
+    /**
+     * Show loading state during flight type switching
+     */
+    showLoadingState() {
+        if (!this.flightList) return;
+        
+        this.flightList.innerHTML = `
+            <div class="loading-state">
+                <div class="loading-spinner">❄️</div>
+                <div class="loading-text">Loading flight data...</div>
+            </div>
+        `;
+        
+        // Add styles for loading state
+        const style = document.createElement('style');
+        style.textContent = `
+            .loading-state {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 60px 40px;
+                text-align: center;
+                grid-column: 1 / -1;
+                background: var(--frost-gradient);
+                backdrop-filter: blur(20px);
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                border-radius: 20px;
+                color: var(--winter-blue-dark);
+            }
+            
+            .loading-spinner {
+                font-size: 4rem;
+                margin-bottom: 20px;
+                animation: spin 2s linear infinite;
+            }
+            
+            .loading-text {
+                font-size: 1.2rem;
+                font-weight: 600;
+                color: var(--silver);
+            }
+        `;
+        
+        if (!document.querySelector('#loading-state-styles')) {
+            style.id = 'loading-state-styles';
+            document.head.appendChild(style);
+        }
+    }
+
+    /**
+     * Pulse animation for elements
+     * @param {HTMLElement} element - Element to animate
+     * @param {number} scale - Scale factor for pulse
+     * @param {number} duration - Animation duration in ms
+     */
+    pulseElement(element, scale = 1.1, duration = 300) {
+        if (!element) return;
+        
+        const originalTransform = element.style.transform;
+        
+        element.style.transition = `transform ${duration / 2}ms ease-out`;
+        element.style.transform = `scale(${scale})`;
+        
+        setTimeout(() => {
+            element.style.transform = originalTransform;
+            setTimeout(() => {
+                element.style.transition = '';
+            }, duration / 2);
+        }, duration / 2);
     }
 }
 

@@ -56,7 +56,7 @@ The following gestures must trigger these actions:
 
 1. Use MediaPipe Hands for real-time landmark tracking (30–60 FPS)  
 2. Implement gesture detection via finger curl, landmark position, or angle rules  
-3. Use AviationStack 
+3. Use AviationStack API keys - 
 4. Handle CORS (use a proxy if required)  
 5. Mirror video and landmark overlay if hand appears reversed  
 6. Debounce gesture detection (200–400 ms)  

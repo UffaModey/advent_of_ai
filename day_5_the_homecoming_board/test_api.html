@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .result { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 3px; }
+        .error { background: #ffe6e6; color: #cc0000; }
+        .success { background: #e6ffe6; color: #006600; }
+        button { padding: 10px 15px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        select { padding: 8px; margin: 5px; }
+        #airport-select { width: 300px; }
+        #results { max-height: 400px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <h1>🛫 Flight API Integration Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Load Airport List</h2>
+        <button onclick="testAirports()">🏢 Test Airport Loading</button>
+        <div id="airports-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Select Airport & Load Flights</h2>
+        <select id="airport-select">
+            <option value="">Select an airport...</option>
+        </select>
+        <button onclick="testArrivals()">🛬 Test Arrivals</button>
+        <button onclick="testDepartures()">🛫 Test Departures</button>
+        <div id="flights-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. API Direct Test</h2>
+        <button onclick="testAPIDirectly()">🔗 Test API Directly</button>
+        <div id="api-result" class="result"></div>
+    </div>
+    
+    <div id="results"></div>
+
+    <!-- Load necessary scripts -->
+    <script src="js/utils/cache.js"></script>
+    <script src="js/utils/api.js"></script>
+    
+    <script>
+        let testAPI;
+        let currentAirports = [];
+        
+        // Initialize API
+        document.addEventListener('DOMContentLoaded', function() {
+            testAPI = window.FlightAPI;
+            console.log('✅ Test page loaded, API available:', !!testAPI);
+        });
+        
+        async function testAirports() {
+            const resultDiv = document.getElementById('airports-result');
+            const airportSelect = document.getElementById('airport-select');
+            
+            try {
+                resultDiv.innerHTML = '⏳ Loading airports...';
+                resultDiv.className = 'result';
+                
+                const airports = await testAPI.getAvailableAirports();
+                currentAirports = airports;
+                
+                console.log('Airports loaded:', airports);
+                
+                if (airports && airports.length > 0) {
+                    resultDiv.innerHTML = `✅ Success! Loaded ${airports.length} airports`;
+                    resultDiv.className = 'result success';
+                    
+                    // Populate airport selector
+                    airportSelect.innerHTML = '<option value="">Select an airport...</option>';
+                    airports.forEach(airport => {
+                        const option = document.createElement('option');
+                        option.value = airport.code;
+                        option.textContent = `${airport.code} - ${airport.name}`;
+                        airportSelect.appendChild(option);
+                    });
+                    
+                    // Show first few airports
+                    const preview = airports.slice(0, 5).map(a => 
+                        `${a.code} - ${a.name} (${a.location})`
+                    ).join('<br>');
+                    
+                    resultDiv.innerHTML += `<br><br><strong>First 5 airports:</strong><br>${preview}`;
+                    if (airports.length > 5) {
+                        resultDiv.innerHTML += `<br><em>... and ${airports.length - 5} more</em>`;
+                    }
+                } else {
+                    resultDiv.innerHTML = '❌ No airports loaded';
+                    resultDiv.className = 'result error';
+                }
+                
+            } catch (error) {
+                console.error('Airport test failed:', error);
+                resultDiv.innerHTML = `❌ Error: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+        
+        async function testArrivals() {
+            const resultDiv = document.getElementById('flights-result');
+            const airportSelect = document.getElementById('airport-select');
+            const selectedAirport = airportSelect.value;
+            
+            if (!selectedAirport) {
+                alert('Please select an airport first');
+                return;
+            }
+            
+            try {
+                resultDiv.innerHTML = `⏳ Loading arrivals for ${selectedAirport}...`;
+                resultDiv.className = 'result';
+                
+                const arrivals = await testAPI.getArrivals(selectedAirport);
+                
+                console.log('Arrivals loaded:', arrivals);
+                
+                if (arrivals && arrivals.length > 0) {
+                    resultDiv.innerHTML = `✅ Success! Loaded ${arrivals.length} arrivals for ${selectedAirport}`;
+                    resultDiv.className = 'result success';
+                    
+                    // Show first few flights
+                    const preview = arrivals.slice(0, 3).map(flight => 
+                        `${flight.flightNumber} - ${flight.airline}<br>` +
+                        `From: ${flight.origin.code} (${flight.origin.name})<br>` +
+                        `Status: ${flight.status.display}<br>` +
+                        `Time: ${new Date(flight.scheduledTime).toLocaleTimeString()}`
+                    ).join('<br><br>');
+                    
+                    resultDiv.innerHTML += `<br><br><strong>Sample arrivals:</strong><br>${preview}`;
+                    if (arrivals.length > 3) {
+                        resultDiv.innerHTML += `<br><br><em>... and ${arrivals.length - 3} more arrivals</em>`;
+                    }
+                } else {
+                    resultDiv.innerHTML = `❌ No arrivals found for ${selectedAirport}`;
+                    resultDiv.className = 'result error';
+                }
+                
+            } catch (error) {
+                console.error('Arrivals test failed:', error);
+                resultDiv.innerHTML = `❌ Error: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+        
+        async function testDepartures() {
+            const resultDiv = document.getElementById('flights-result');
+            const airportSelect = document.getElementById('airport-select');
+            const selectedAirport = airportSelect.value;
+            
+            if (!selectedAirport) {
+                alert('Please select an airport first');
+                return;
+            }
+            
+            try {
+                resultDiv.innerHTML = `⏳ Loading departures for ${selectedAirport}...`;
+                resultDiv.className = 'result';
+                
+                const departures = await testAPI.getDepartures(selectedAirport);
+                
+                console.log('Departures loaded:', departures);
+                
+                if (departures && departures.length > 0) {
+                    resultDiv.innerHTML = `✅ Success! Loaded ${departures.length} departures for ${selectedAirport}`;
+                    resultDiv.className = 'result success';
+                    
+                    // Show first few flights
+                    const preview = departures.slice(0, 3).map(flight => 
+                        `${flight.flightNumber} - ${flight.airline}<br>` +
+                        `To: ${flight.destination.code} (${flight.destination.name})<br>` +
+                        `Status: ${flight.status.display}<br>` +
+                        `Time: ${new Date(flight.scheduledTime).toLocaleTimeString()}`
+                    ).join('<br><br>');
+                    
+                    resultDiv.innerHTML += `<br><br><strong>Sample departures:</strong><br>${preview}`;
+                    if (departures.length > 3) {
+                        resultDiv.innerHTML += `<br><br><em>... and ${departures.length - 3} more departures</em>`;
+                    }
+                } else {
+                    resultDiv.innerHTML = `❌ No departures found for ${selectedAirport}`;
+                    resultDiv.className = 'result error';
+                }
+                
+            } catch (error) {
+                console.error('Departures test failed:', error);
+                resultDiv.innerHTML = `❌ Error: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+        
+        async function testAPIDirectly() {
+            const resultDiv = document.getElementById('api-result');
+            
+            try {
+                resultDiv.innerHTML = '⏳ Testing direct API call...';
+                resultDiv.className = 'result';
+                
+                // Test airports endpoint
+                const airportsUrl = testAPI.buildURL('airports', { limit: 10 });
+                console.log('Testing URL:', airportsUrl);
+                
+                const response = await fetch(airportsUrl);
+                const data = await response.json();
+                
+                console.log('Direct API response:', data);
+                
+                if (data && data.data) {
+                    resultDiv.innerHTML = `✅ Direct API Success! Retrieved ${data.data.length} airports`;
+                    resultDiv.className = 'result success';
+                    
+                    // Show sample response
+                    if (data.data.length > 0) {
+                        const sample = data.data[0];
+                        resultDiv.innerHTML += `<br><br><strong>Sample airport data:</strong><br>` +
+                            `Code: ${sample.iata_code}<br>` +
+                            `Name: ${sample.airport_name}<br>` +
+                            `City: ${sample.city_name}<br>` +
+                            `Country: ${sample.country_name}`;
+                    }
+                } else {
+                    resultDiv.innerHTML = '❌ API returned no data';
+                    resultDiv.className = 'result error';
+                }
+                
+            } catch (error) {
+                console.error('Direct API test failed:', error);
+                resultDiv.innerHTML = `❌ Direct API Error: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+        
+        // Auto-test airports on load
+        window.addEventListener('load', function() {
+            setTimeout(testAirports, 1000);
+        });
+    </script>
+</body>
+</html>

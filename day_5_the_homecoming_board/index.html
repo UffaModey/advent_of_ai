@@ -28,6 +28,65 @@
         <div id="gesture-name">Ready</div>
     </div>
 
+    <!-- Permanent Gesture Controls Panel -->
+    <div id="gesture-controls-panel">
+        <div class="gesture-controls-header">
+            <h3>✋ Hand Gesture Controls</h3>
+            <div class="controls-toggle" id="controls-toggle">📝</div>
+        </div>
+        <div class="gesture-controls-grid">
+            <div class="gesture-control">
+                <div class="gesture-emoji">🤙</div>
+                <div class="gesture-info">
+                    <div class="gesture-label">Shaka</div>
+                    <div class="gesture-action">Load Arrivals</div>
+                </div>
+            </div>
+            <div class="gesture-control">
+                <div class="gesture-emoji">👌</div>
+                <div class="gesture-info">
+                    <div class="gesture-label">OK Sign</div>
+                    <div class="gesture-action">Load Departures</div>
+                </div>
+            </div>
+            <div class="gesture-control">
+                <div class="gesture-emoji">🖐️</div>
+                <div class="gesture-info">
+                    <div class="gesture-label">Wave Hand</div>
+                    <div class="gesture-action">Navigate Lists</div>
+                </div>
+            </div>
+            <div class="gesture-control">
+                <div class="gesture-emoji">✊</div>
+                <div class="gesture-info">
+                    <div class="gesture-label">Closed Fist</div>
+                    <div class="gesture-action">Select Flight</div>
+                </div>
+            </div>
+            <div class="gesture-control">
+                <div class="gesture-emoji">🖖</div>
+                <div class="gesture-info">
+                    <div class="gesture-label">Vulcan Sign</div>
+                    <div class="gesture-action">Back/Exit</div>
+                </div>
+            </div>
+            <div class="gesture-control">
+                <div class="gesture-emoji">✌️</div>
+                <div class="gesture-info">
+                    <div class="gesture-label">Peace Sign</div>
+                    <div class="gesture-action">Refresh Data</div>
+                </div>
+            </div>
+            <div class="gesture-control">
+                <div class="gesture-emoji">🤘</div>
+                <div class="gesture-info">
+                    <div class="gesture-label">Rock Sign</div>
+                    <div class="gesture-action">Switch Airport</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Main application container -->
     <div id="app">
         <!-- Header -->
@@ -35,8 +94,8 @@
             <h1>✈️ The Homecoming Board</h1>
             <p>Winter Festival Edition</p>
             <div id="current-airport">
-                <span id="airport-code">JFK</span>
-                <span id="airport-name">John F. Kennedy International</span>
+                <span id="airport-code">Loading...</span>
+                <span id="airport-name">Fetching airport data...</span>
             </div>
         </header>
 
@@ -136,31 +195,7 @@
             <div id="airport-selector">
                 <h2>🛫 Select Airport</h2>
                 <div id="airport-list">
-                    <div class="airport-option active" data-code="JFK" data-name="John F. Kennedy International">
-                        <div class="airport-code">JFK</div>
-                        <div class="airport-name">John F. Kennedy International</div>
-                        <div class="airport-location">New York, NY</div>
-                    </div>
-                    <div class="airport-option" data-code="LAX" data-name="Los Angeles International">
-                        <div class="airport-code">LAX</div>
-                        <div class="airport-name">Los Angeles International</div>
-                        <div class="airport-location">Los Angeles, CA</div>
-                    </div>
-                    <div class="airport-option" data-code="ORD" data-name="O'Hare International">
-                        <div class="airport-code">ORD</div>
-                        <div class="airport-name">O'Hare International</div>
-                        <div class="airport-location">Chicago, IL</div>
-                    </div>
-                    <div class="airport-option" data-code="ATL" data-name="Hartsfield-Jackson Atlanta International">
-                        <div class="airport-code">ATL</div>
-                        <div class="airport-name">Hartsfield-Jackson Atlanta International</div>
-                        <div class="airport-location">Atlanta, GA</div>
-                    </div>
-                    <div class="airport-option" data-code="DFW" data-name="Dallas/Fort Worth International">
-                        <div class="airport-code">DFW</div>
-                        <div class="airport-name">Dallas/Fort Worth International</div>
-                        <div class="airport-location">Dallas, TX</div>
-                    </div>
+                    <!-- Airport options will be populated dynamically from API -->
                 </div>
                 <button id="confirm-airport" class="confirm-button">✊ Select Airport</button>
             </div>
