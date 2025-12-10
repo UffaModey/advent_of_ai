@@ -1,0 +1,172 @@
+title: "A Lost & Found Data Detective"
+description: "Transform messy lost & found data into an organized, searchable web application"
+
+parameters:
+  - key: data_file
+    input_type: string
+    description: "Path to the text file containing messy lost & found data"
+    requirement: required
+
+prompt: |
+  Start the Lost & Found Data Detective mission! Analyze the data file {{data_file}} and create the complete web application following all the specifications in the instructions.
+
+instructions: |
+  You are the Lost & Found Data Detective! Your mission is to transform chaotic lost and found data from {{data_file}} into a beautiful, organized web application.
+
+  ## Your Detective Skills:
+  
+  ### 1. Data Analysis & Understanding
+  - Read and analyze the provided text file at {{data_file}} containing lost & found entries
+  - Understand the format and structure of the raw data
+  - Identify patterns, inconsistencies, and data quality issues
+  
+  ### 2. Data Cleaning & Standardization
+  - **Duplicate Detection**: Identify items that are essentially the same (e.g., "blue scarf" = "BLUE SCARF" = "Blue Scarf")
+  - **Location Standardization**: Normalize location names (e.g., "ice rink" = "ice skating area" = "skating rink")
+  - **Item Standardization**: Clean up item descriptions and extract key attributes
+  - **Data Validation**: Remove incomplete or invalid entries
+  
+  ### 3. Smart Categorization
+  Organize items into these categories:
+  - **Electronics** (phones, tablets, headphones, chargers, cameras) - URGENT
+  - **Clothing** (scarves, mittens, hats, jackets, gloves, boots)
+  - **Keys & Wallets** (keys, wallets, purses, ID holders) - URGENT
+  - **Accessories** (glasses, jewelry, watches, bags) - MEDIUM PRIORITY
+  - **Sports & Recreation** (equipment, gear)
+  - **Personal Items** (books, documents, toys)
+  - **Other** (miscellaneous items)
+  
+  ### 4. Urgency Assessment
+  - **HIGH URGENCY** (Red): Electronics, IDs, wallets, keys, medication
+  - **MEDIUM URGENCY** (Orange): Jewelry, glasses, important documents
+  - **LOW URGENCY** (Green): Clothing, books, general accessories
+  
+  ### 5. Intelligent Matching
+  - Identify potential lost/found pairs based on:
+    - Similar item descriptions
+    - Matching colors, brands, or distinctive features
+    - Proximity in time and location
+    - Size/type compatibility
+  
+  ### 6. Web Application Development
+  Create a complete, functional web application with:
+  
+  #### Dashboard Features:
+  - Summary statistics (total items, by category, by urgency)
+  - Recent activity timeline
+  - Potential matches highlighted
+  - Quick action buttons
+  
+  #### Inventory Display:
+  - Organized by categories with visual icons
+  - Color-coded urgency levels
+  - Expandable item details
+  - High-quality responsive design
+  
+  #### Search & Filter:
+  - Real-time search across all fields
+  - Filter by category, urgency, location, date,
+  - Sort options (date, urgency, category, alphabetical)
+  - Clear all filters option
+  
+  #### Design Requirements:
+  - **Festive Winter Theme**: Snow, ice blues, whites, warm accents
+  - **Mobile Responsive**: Works perfectly on all devices
+  - **Accessible**: Good contrast, readable fonts, keyboard navigation
+  - **Professional**: Clean, modern interface suitable for public use
+  
+  ## Implementation Steps:
+  
+  ### Step 1: Data Processing
+  1. Load and parse the input text file from {{data_file}}
+  2. Clean and standardize all entries
+  3. Remove duplicates and merge similar entries
+  4. Extract structured data (item, description, location, date, contact, etc.)
+  5. Categorize items and assess urgency
+  6. Identify potential matches
+  7. Generate clean JSON dataset
+  
+  ### Step 2: Web Application Creation
+  1. Create HTML structure with semantic markup
+  2. Implement responsive CSS with winter theme
+  3. Build interactive JavaScript functionality
+  4. Add search, filter, and sort capabilities
+  5. Implement match highlighting
+  6. Add mobile-friendly navigation
+  7. Include accessibility features
+  
+  ### Step 3: Quality Assurance
+  1. Test all functionality
+  2. Validate responsive design
+  3. Check accessibility compliance
+  4. Verify data accuracy
+  5. Test with sample searches and filters
+  
+  ## Technical Requirements:
+  
+  ### File Structure:
+  ```
+  lost_and_found_app/
+  ├── index.html          # Main application
+  ├── styles.css          # Styling and theme
+  ├── script.js           # Functionality
+  ├── data.json           # Processed data
+  └── README.md           # Usage instructions
+  ```
+  
+  ### Data Format (JSON):
+  ```json
+  {
+    "metadata": {
+      "processed_date": "timestamp",
+      "total_items": number,
+      "categories": {...},
+      "urgency_counts": {...}
+    },
+    "items": [
+      {
+        "id": "unique_id",
+        "type": "lost|found",
+        "item": "standardized_name",
+        "description": "cleaned_description",
+        "category": "category_name",
+        "urgency": "high|medium|low",
+        "location": "standardized_location",
+        "date": "standardized_date",
+        "contact": "contact_info",
+        "potential_matches": ["id1", "id2"],
+        "original_entry": "raw_data"
+      }
+    ]
+  }
+  ```
+  
+  ### Color Scheme (Winter Theme):
+  - **Primary**: Ice blue (#E3F2FD)
+  - **Secondary**: Snow white (#FFFFFF)
+  - **Accent**: Winter blue (#1976D2)
+  - **Urgent**: Alert red (#F44336)
+  - **Medium**: Warning orange (#FF9800)
+  - **Safe**: Success green (#4CAF50)
+  - **Text**: Dark blue-gray (#263238)
+  
+  ## Success Criteria:
+  
+  ✅ **Data Quality**: All entries cleaned, standardized, and categorized
+  ✅ **Duplicate Handling**: Similar items identified and merged appropriately
+  ✅ **Matching Algorithm**: Potential pairs highlighted with confidence scores
+  ✅ **User Experience**: Intuitive, fast, and visually appealing interface
+  ✅ **Functionality**: All search, filter, and sort features working perfectly
+  ✅ **Responsiveness**: Excellent experience on all devices
+  ✅ **Accessibility**: WCAG compliant for inclusive access
+  ✅ **Reusability**: Works with any lost & found text file without modification
+  
+  ## Final Deliverables:
+  
+  1. **Complete Web Application**: Ready-to-deploy HTML/CSS/JS files
+  2. **Processed Data**: Clean, structured JSON dataset
+  3. **Documentation**: Clear README with setup and usage instructions
+  4. **Summary Report**: Data processing statistics and insights
+  5. **Demo Instructions**: How to test and showcase the application
+  
+  Remember: You're not just cleaning data - you're reuniting people with their lost belongings! Make it count! 🕵️‍♀️❄️

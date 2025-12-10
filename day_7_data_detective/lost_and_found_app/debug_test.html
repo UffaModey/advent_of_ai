@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Test - Lost & Found Detective</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .pass { color: green; font-weight: bold; }
+        .fail { color: red; font-weight: bold; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🕵️‍♀️ Lost & Found Filter Test</h1>
+    
+    <div class="test-section">
+        <h2>Data Loading Test</h2>
+        <p>Total items loaded: <span id="totalItems">Loading...</span></p>
+        <p>Categories: <span id="categoriesList">Loading...</span></p>
+        <p>Locations: <span id="locationsList">Loading...</span></p>
+    </div>
+
+    <div class="test-section">
+        <h2>Filter Tests</h2>
+        <button onclick="testCategoryFilter()">Test Category Filter</button>
+        <button onclick="testLocationFilter()">Test Location Filter</button>
+        <button onclick="testUrgencyFilter()">Test Urgency Filter</button>
+        <button onclick="testSearchFilter()">Test Search Filter</button>
+        <div id="testResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Sample Items</h2>
+        <div id="sampleItems"></div>
+    </div>
+
+    <script>
+        let allItems = [];
+        
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                allItems = data.items || [];
+                
+                document.getElementById('totalItems').textContent = allItems.length;
+                
+                const categories = [...new Set(allItems.map(item => item.category))];
+                document.getElementById('categoriesList').textContent = categories.join(', ');
+                
+                const locations = [...new Set(allItems.map(item => item.location))];
+                document.getElementById('locationsList').textContent = locations.join(', ');
+                
+                // Show sample items
+                const sampleDiv = document.getElementById('sampleItems');
+                sampleDiv.innerHTML = allItems.slice(0, 3).map(item => `
+                    <div style="border: 1px solid #ccc; padding: 10px; margin: 5px;">
+                        <strong>${item.item}</strong><br>
+                        Category: ${item.category}<br>
+                        Location: ${item.location}<br>
+                        Urgency: ${item.urgency}<br>
+                        Description: ${item.description}
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Failed to load data:', error);
+                document.getElementById('totalItems').textContent = 'Error loading data';
+            }
+        }
+        
+        function testCategoryFilter() {
+            const clothingItems = allItems.filter(item => item.category === 'Clothing');
+            const electronicsItems = allItems.filter(item => item.category === 'Electronics');
+            
+            let results = `<h3>Category Filter Test</h3>`;
+            results += `<p>Clothing items: ${clothingItems.length} (Expected: ~64)</p>`;
+            results += `<p>Electronics items: ${electronicsItems.length} (Expected: ~23)</p>`;
+            
+            if (clothingItems.length > 50 && electronicsItems.length > 15) {
+                results += `<p class="pass">✅ Category filter working correctly!</p>`;
+            } else {
+                results += `<p class="fail">❌ Category filter may have issues</p>`;
+            }
+            
+            document.getElementById('testResults').innerHTML = results;
+        }
+        
+        function testLocationFilter() {
+            const iceRinkItems = allItems.filter(item => item.location === 'Ice Skating Area');
+            const cocoaStandItems = allItems.filter(item => item.location === 'Hot Cocoa Stand');
+            
+            let results = `<h3>Location Filter Test</h3>`;
+            results += `<p>Ice Skating Area items: ${iceRinkItems.length}</p>`;
+            results += `<p>Hot Cocoa Stand items: ${cocoaStandItems.length}</p>`;
+            
+            if (iceRinkItems.length > 0 && cocoaStandItems.length > 0) {
+                results += `<p class="pass">✅ Location filter working correctly!</p>`;
+            } else {
+                results += `<p class="fail">❌ Location filter may have issues</p>`;
+            }
+            
+            document.getElementById('testResults').innerHTML = results;
+        }
+        
+        function testUrgencyFilter() {
+            const highItems = allItems.filter(item => item.urgency === 'high');
+            const lowItems = allItems.filter(item => item.urgency === 'low');
+            
+            let results = `<h3>Urgency Filter Test</h3>`;
+            results += `<p>High urgency items: ${highItems.length} (Expected: ~45)</p>`;
+            results += `<p>Low urgency items: ${lowItems.length} (Expected: ~79)</p>`;
+            
+            if (highItems.length > 30 && lowItems.length > 50) {
+                results += `<p class="pass">✅ Urgency filter working correctly!</p>`;
+            } else {
+                results += `<p class="fail">❌ Urgency filter may have issues</p>`;
+            }
+            
+            document.getElementById('testResults').innerHTML = results;
+        }
+        
+        function testSearchFilter() {
+            const phoneItems = allItems.filter(item => 
+                item.item.toLowerCase().includes('phone') || 
+                item.description.toLowerCase().includes('phone')
+            );
+            const scarfItems = allItems.filter(item => 
+                item.item.toLowerCase().includes('scarf') || 
+                item.description.toLowerCase().includes('scarf')
+            );
+            
+            let results = `<h3>Search Filter Test</h3>`;
+            results += `<p>Phone-related items: ${phoneItems.length}</p>`;
+            results += `<p>Scarf-related items: ${scarfItems.length}</p>`;
+            
+            if (phoneItems.length > 0 && scarfItems.length > 0) {
+                results += `<p class="pass">✅ Search filter working correctly!</p>`;
+            } else {
+                results += `<p class="fail">❌ Search filter may have issues</p>`;
+            }
+            
+            document.getElementById('testResults').innerHTML = results;
+        }
+        
+        // Load data when page loads
+        loadData();
+    </script>
+</body>
+</html>
