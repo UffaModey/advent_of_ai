@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍴 Dmitri's Vendor Directory - No More Napkin Notes!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            font-style: italic;
+        }
+        
+        .stain-free-badge {
+            position: absolute;
+            top: -10px;
+            right: 0;
+            background: #28a745;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 25px;
+            font-size: 0.8em;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .metadata {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .metadata h3 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .vendor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .vendor-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .vendor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            border-color: #007bff;
+        }
+        
+        .vendor-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .food-type {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .location {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .description {
+            color: #777;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .vendor-id {
+            font-family: 'Courier New', monospace;
+            font-size: 0.7em;
+            color: #999;
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        /* Food type specific colors */
+        .food-type.mexican { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
+        .food-type.italian { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .food-type.polish { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .food-type.indian { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .food-type.sushi { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .food-type.pizza { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .food-type.waffles { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+        .food-type.pretzels { background: linear-gradient(135deg, #d35400, #a0522d); }
+        .food-type.cookies { background: linear-gradient(135deg, #e91e63, #ad1457); }
+        .food-type.drinks { background: linear-gradient(135deg, #1abc9c, #16a085); }
+        
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .vendor-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍴 Dmitri's Vendor Directory</h1>
+            <p class="subtitle">From Crumpled Napkin Notes to Digital Perfection</p>
+            <div class="stain-free-badge">☕ Stain-Free!</div>
+        </div>
+        
+        <div id="loading" class="loading">
+            <p>🧹 Loading clean vendor data...</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">No more deciphering hot cocoa stains!</p>
+        </div>
+        
+        <div id="error" class="error" style="display: none;">
+            <h3>Oops! Something went wrong</h3>
+            <p>Could not load vendor data. Make sure the server is running!</p>
+        </div>
+        
+        <div id="content" style="display: none;">
+            <div id="metadata" class="metadata"></div>
+            <div id="stats" class="stats"></div>
+            <div id="vendor-grid" class="vendor-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        // Food type to CSS class mapping
+        const foodTypeClasses = {
+            'Mexican': 'mexican',
+            'Italian': 'italian', 
+            'Polish': 'polish',
+            'Indian': 'indian',
+            'Sushi': 'sushi',
+            'Pizza': 'pizza',
+            'Waffles': 'waffles',
+            'Pretzels': 'pretzels',
+            'Cookies & Sweets': 'cookies',
+            'Hot Drinks & Pastries': 'drinks'
+        };
+
+        // Food type to emoji mapping
+        const foodEmojis = {
+            'Mexican': '🌮',
+            'Italian': '🍝', 
+            'Polish': '🥟',
+            'Indian': '🍛',
+            'Sushi': '🍣',
+            'Pizza': '🍕',
+            'Waffles': '🧇',
+            'Pretzels': '🥨',
+            'Cookies & Sweets': '🍪',
+            'Hot Drinks & Pastries': '☕'
+        };
+
+        // Location emoji mapping
+        const getLocationEmoji = (location) => {
+            if (location.includes('plaza')) return '🏛️';
+            if (location.includes('entrance')) return '🚪';
+            if (location.includes('rink') || location.includes('ice')) return '⛸️';
+            if (location.includes('stage')) return '🎭';
+            if (location.includes('court')) return '🍽️';
+            if (location.includes('mobile') || location.includes('cart')) return '🚚';
+            if (location.includes('tent')) return '⛺';
+            return '📍';
+        };
+
+        async function loadVendorData() {
+            try {
+                const response = await fetch('/api/vendors');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                displayVendorData(data);
+                
+            } catch (error) {
+                console.error('Error loading vendor data:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+
+        function displayVendorData(data) {
+            // Hide loading, show content
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+
+            // Display metadata
+            const metadataDiv = document.getElementById('metadata');
+            metadataDiv.innerHTML = `
+                <h3>📊 Data Information</h3>
+                <p><strong>Source:</strong> ${data.metadata.source}</p>
+                <p><strong>Last Updated:</strong> ${data.metadata.last_updated}</p>
+                <p><strong>Status:</strong> ${data.metadata.status}</p>
+            `;
+
+            // Display stats
+            const statsDiv = document.getElementById('stats');
+            const foodTypes = [...new Set(data.vendors.map(v => v.food_type))];
+            const locations = [...new Set(data.vendors.map(v => v.location))];
+            
+            statsDiv.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-number">${data.metadata.total_vendors}</div>
+                    <div class="stat-label">Total Vendors</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${foodTypes.length}</div>
+                    <div class="stat-label">Food Types</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${locations.length}</div>
+                    <div class="stat-label">Locations</div>
+                </div>
+            `;
+
+            // Display vendors
+            const gridDiv = document.getElementById('vendor-grid');
+            gridDiv.innerHTML = data.vendors.map(vendor => {
+                const foodClass = foodTypeClasses[vendor.food_type] || 'default';
+                const foodEmoji = foodEmojis[vendor.food_type] || '🍽️';
+                const locationEmoji = getLocationEmoji(vendor.location);
+                
+                return `
+                    <div class="vendor-card">
+                        <div class="vendor-name">
+                            ${foodEmoji} ${vendor.name}
+                        </div>
+                        <div class="food-type ${foodClass}">
+                            ${vendor.food_type}
+                        </div>
+                        <div class="location">
+                            ${locationEmoji} ${vendor.location}
+                        </div>
+                        <div class="description">
+                            ${vendor.description}
+                        </div>
+                        <div class="vendor-id">
+                            ID: ${vendor.id}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadVendorData);
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+{
+  "metadata": {
+    "source": "Dmitri's Napkin Notes (Stain-Free Version)",
+    "total_vendors": 10,
+    "last_updated": "2025-12-11",
+    "status": "Hot cocoa stains successfully removed!"
+  },
+  "vendors": [
+    {
+      "id": "joes_hot_cocoa",
+      "name": "Joes hot cocoa",
+      "location": "main plaza",
+      "food_type": "Hot Drinks & Pastries",
+      "description": "Hot Drinks & Pastries at main plaza"
+    },
+    {
+      "id": "taco_truck_del_fuego",
+      "name": "Taco Truck Del Fuego!",
+      "location": "north entrance",
+      "food_type": "Mexican",
+      "description": "Mexican at north entrance"
+    },
+    {
+      "id": "sweet_treats_bakery",
+      "name": "sweet treats bakery",
+      "location": "near the ice rink",
+      "food_type": "Cookies & Sweets",
+      "description": "Cookies & Sweets at near the ice rink"
+    },
+    {
+      "id": "pierogi_palace",
+      "name": "Pierogi Palace",
+      "location": "east side",
+      "food_type": "Polish",
+      "description": "Polish at east side"
+    },
+    {
+      "id": "waffle_wonderland",
+      "name": "waffle wonderland",
+      "location": "next to storytelling tent",
+      "food_type": "Waffles",
+      "description": "Waffles at next to storytelling tent"
+    },
+    {
+      "id": "mamas_meatballs",
+      "name": "mamas meatballs",
+      "location": "food court area",
+      "food_type": "Italian",
+      "description": "Italian at food court area"
+    },
+    {
+      "id": "the_pretzel_pretender",
+      "name": "The Pretzel Pretender",
+      "location": "west plaza",
+      "food_type": "Pretzels",
+      "description": "Pretzels at west plaza"
+    },
+    {
+      "id": "curry_in_a_hurry",
+      "name": "Curry in a Hurry",
+      "location": "mobile cart (roams around)",
+      "food_type": "Indian",
+      "description": "Indian at mobile cart (roams around)"
+    },
+    {
+      "id": "sushi_on_ice",
+      "name": "Sushi on Ice",
+      "location": "near skating rink",
+      "food_type": "Sushi",
+      "description": "Sushi at near skating rink"
+    },
+    {
+      "id": "pizza_palace",
+      "name": "Pizza Palace",
+      "location": "main stage area",
+      "food_type": "Pizza",
+      "description": "Pizza at main stage area"
+    }
+  ]
+}
