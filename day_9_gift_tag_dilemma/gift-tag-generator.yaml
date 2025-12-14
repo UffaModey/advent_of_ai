@@ -1,0 +1,174 @@
+title: Gift Tag Generator
+description: Generate beautiful, fully formatted, print-ready gift tags with customizable aesthetics, languages, and layouts
+version: 1.0.0
+
+parameters:
+  - key: recipient_name
+    input_type: string
+    requirement: required
+    description: Name of the gift recipient
+    default: "Dear Friend"
+  
+  - key: gift_description
+    input_type: string
+    requirement: required
+    description: Brief description of the gift
+    default: "A special surprise"
+  
+  - key: sender_name
+    input_type: string
+    requirement: required
+    description: Name of the person giving the gift
+    default: "With love"
+  
+  - key: tag_style
+    input_type: select
+    requirement: required
+    description: Visual style of the gift tag
+    default: "elegant"
+    options:
+      - elegant
+      - playful
+      - minimalist
+      - festive
+  
+  - key: include_poem
+    input_type: boolean
+    requirement: optional
+    description: Whether to include a short poem on the tag
+    default: false
+  
+  - key: qr_message_url
+    input_type: string
+    requirement: optional
+    description: URL to encode in QR code (optional)
+    default: ""
+  
+  - key: gift_size
+    input_type: select
+    requirement: required
+    description: Size of the gift tag affecting layout
+    default: "medium"
+    options:
+      - small
+      - medium
+      - large
+
+  - key: favorite_color
+    input_type: string
+    requirement: required
+    description: Recipient's favorite color name
+    default: "blue"
+
+  - key: language
+    input_type: select
+    requirement: required
+    description: Language code for greetings
+    default: "en"
+    options:
+      - en
+      - es
+      - fr
+      - de
+      - it
+      - pt
+      - ja
+      - zh
+
+  - key: tone
+    input_type: select
+    requirement: required
+    description: Tone of the message
+    default: "heartfelt"
+    options:
+      - formal
+      - casual
+      - humorous
+      - heartfelt
+
+prompt: |
+  Start the Gift Tag Generator! Analyze the parameters and use to execute the instructions.
+
+instructions: |
+  Create a beautiful HTML gift tag file at tags/gift_tag.html with embedded CSS styling.
+
+  First, create the tags directory if it doesn't exist. Then generate a print-ready gift tag with these specifications:
+
+  RECIPIENT SECTION:
+  Display "To: {{ recipient_name }}" prominently as the main recipient name.
+
+  GIFT DESCRIPTION:
+  Include the gift information: "{{ gift_description }}" in an appropriate style.
+
+  SENDER SECTION: 
+  Show "From: {{ sender_name }}" as the signature line.
+
+  VISUAL STYLE:
+  Apply the "{{ tag_style }}" theme:
+  - If tag_style is "elegant": Use serif fonts, gold accents, ornate borders
+  - If tag_style is "playful": Use bright colors, fun fonts, rounded corners  
+  - If tag_style is "minimalist": Use clean typography, whitespace, subtle colors
+  - If tag_style is "festive": Use red/green/gold colors, holiday patterns
+
+  SIZE CONFIGURATION:
+  Set dimensions based on {{ gift_size }}:
+  - If gift_size is "small": 3 inches wide by 2 inches tall
+  - If gift_size is "medium": 4 inches wide by 3 inches tall  
+  - If gift_size is "large": 5 inches wide by 4 inches tall
+
+  COLOR THEMING:
+  Use {{ favorite_color }} as the primary accent color throughout the design. Convert the color name to appropriate CSS color values.
+
+  GREETING TEXT:
+  Generate greeting based on {{ language }} and {{ tone }}:
+  - For language "en" and tone "formal": "Season's Greetings"
+  - For language "en" and tone "casual": "Happy Holidays" 
+  - For language "en" and tone "humorous": "Ho Ho Hope You Like It!"
+  - For language "en" and tone "heartfelt": "Merry Christmas"
+  - For language "es" and tone "formal": "Felices Fiestas"
+  - For language "es" and tone "casual": "Feliz Navidad"
+  - For language "es" and tone "humorous": "¡Ho Ho Espero que te Guste!"
+  - For language "es" and tone "heartfelt": "Con Cariño"
+  - For language "fr" and tone "formal": "Joyeuses Fêtes"
+  - For language "fr" and tone "casual": "Joyeux Noël"
+  - For language "fr" and tone "humorous": "Ho Ho J'espère que ça te Plaira!"
+  - For language "fr" and tone "heartfelt": "Avec Amour"
+  - For language "de" and tone "formal": "Schöne Feiertage"
+  - For language "de" and tone "casual": "Frohe Weihnachten"
+  - For language "de" and tone "humorous": "Ho Ho Hoffentlich gefällt es!"
+  - For language "de" and tone "heartfelt": "Mit Liebe"
+  - For language "it" and tone "formal": "Buone Feste"
+  - For language "it" and tone "casual": "Buon Natale"
+  - For language "it" and tone "humorous": "Ho Ho Spero ti Piaccia!"
+  - For language "it" and tone "heartfelt": "Con Amore"
+  - For language "pt" and tone "formal": "Boas Festas"
+  - For language "pt" and tone "casual": "Feliz Natal"
+  - For language "pt" and tone "humorous": "Ho Ho Espero que Goste!"
+  - For language "pt" and tone "heartfelt": "Com Amor"
+  - For language "ja" and tone "formal": "季節のご挨拶"
+  - For language "ja" and tone "casual": "ハッピーホリデー"
+  - For language "ja" and tone "humorous": "ホーホー気に入ってくれると嬉しいな！"
+  - For language "ja" and tone "heartfelt": "愛を込めて"
+  - For language "zh" and tone "formal": "节日问候"
+  - For language "zh" and tone "casual": "节日快乐"
+  - For language "zh" and tone "humorous": "呵呵希望你喜欢！"
+  - For language "zh" and tone "heartfelt": "爱意满满"
+
+  POEM INCLUSION:
+  If {{ include_poem }} is true, add a 4-6 line poem matching the {{ tag_style }} and {{ language }}.
+  If {{ include_poem }} is false, skip the poem section entirely.
+
+  QR CODE:
+  If {{ qr_message_url }} is provided and not empty, generate a QR code using:
+  https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ qr_message_url }}
+  If {{ qr_message_url }} is empty, do not include a QR code.
+
+  STYLE SWITCHER:
+  Include an interactive preview interface that allows switching between all 4 tag styles (elegant, playful, minimalist, festive) to see how the gift tag looks in each style. Add buttons or controls to toggle between styles dynamically.
+
+  Create a complete HTML file with embedded CSS that is immediately print-ready and visually stunning.
+
+outputs:
+  - name: gift_tag_html
+    description: Generated HTML file with the gift tag
+    path: tags/gift_tag.html
