@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirate Day Adventure - Kids Festival Poster</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Fredoka:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        @media print {
+            body {
+                width: 8.5in;
+                height: 11in;
+                margin: 0;
+                padding: 0.25in;
+            }
+            .poster {
+                width: 100%;
+                height: 100%;
+                box-shadow: none !important;
+            }
+        }
+        
+        body {
+            font-family: 'Fredoka', 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #87CEEB 0%, #FFE4B5 50%, #98FB98 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .poster {
+            width: 8.5in;
+            height: 11in;
+            background: linear-gradient(45deg, #FF6B6B 0%, #4ECDC4 25%, #45B7D1 50%, #FFA07A 75%, #98D8C8 100%);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .poster::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.3) 0%, transparent 20%),
+                radial-gradient(circle at 80% 30%, rgba(255,255,255,0.2) 0%, transparent 15%),
+                radial-gradient(circle at 30% 70%, rgba(255,255,255,0.25) 0%, transparent 18%),
+                radial-gradient(circle at 70% 80%, rgba(255,255,255,0.3) 0%, transparent 22%);
+            pointer-events: none;
+        }
+        
+        .border-frame {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 8px dashed #FFD700;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.95);
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.1);
+        }
+        
+        .content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .header {
+            margin-bottom: 20px;
+        }
+        
+        .event-type {
+            background: linear-gradient(45deg, #FF69B4, #FFB6C1);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(255,105,180,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .title {
+            font-family: 'Fredoka One', 'Impact', sans-serif;
+            font-size: 54px;
+            background: linear-gradient(45deg, #8B4513, #D2691E, #CD853F, #F4A460);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 3px 3px 0px rgba(139,69,19,0.3);
+            margin-bottom: 10px;
+            line-height: 0.9;
+            transform: rotate(-2deg);
+        }
+        
+        .pirate-elements {
+            font-size: 32px;
+            margin: 10px 0;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        
+        .main-info {
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border: 4px solid #FFD700;
+        }
+        
+        .date-time {
+            font-size: 36px;
+            color: #E74C3C;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px rgba(231,76,60,0.2);
+        }
+        
+        .time {
+            font-size: 28px;
+            color: #3498DB;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .location {
+            font-size: 32px;
+            color: #27AE60;
+            font-weight: 600;
+            text-shadow: 2px 2px 0px rgba(39,174,96,0.2);
+        }
+        
+        .decorative-elements {
+            font-size: 24px;
+            margin: 15px 0;
+            opacity: 0.8;
+        }
+        
+        .theme-highlight {
+            background: linear-gradient(45deg, #8B4513, #D2691E);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 15px 0;
+            box-shadow: 0 6px 20px rgba(139,69,19,0.3);
+        }
+        
+        .theme-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .theme-description {
+            font-size: 18px;
+            opacity: 0.95;
+        }
+        
+        .footer {
+            margin-top: 20px;
+        }
+        
+        .call-to-action {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            box-shadow: 0 6px 20px rgba(255,107,107,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .contact-info {
+            font-size: 16px;
+            color: #666;
+            background: rgba(255,255,255,0.8);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        .floating-decorations {
+            position: absolute;
+            font-size: 20px;
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .decoration-1 { top: 100px; left: 50px; animation-delay: 0s; }
+        .decoration-2 { top: 200px; right: 60px; animation-delay: 1s; }
+        .decoration-3 { bottom: 150px; left: 40px; animation-delay: 2s; }
+        .decoration-4 { bottom: 100px; right: 50px; animation-delay: 0.5s; }
+        .decoration-5 { top: 300px; left: 80px; animation-delay: 1.5s; }
+        .decoration-6 { top: 400px; right: 40px; animation-delay: 2.5s; }
+        
+        @media (max-width: 768px) {
+            .poster {
+                width: 95%;
+                height: auto;
+                min-height: 100vh;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 36px;
+            }
+            
+            .date-time {
+                font-size: 28px;
+            }
+            
+            .time, .location {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <div class="border-frame"></div>
+        
+        <div class="floating-decorations decoration-1">⭐</div>
+        <div class="floating-decorations decoration-2">🎈</div>
+        <div class="floating-decorations decoration-3">🎊</div>
+        <div class="floating-decorations decoration-4">⭐</div>
+        <div class="floating-decorations decoration-5">🎈</div>
+        <div class="floating-decorations decoration-6">🎊</div>
+        
+        <div class="content">
+            <div class="header">
+                <div class="event-type">🎪 Kids Festival Event 🎪</div>
+                <h1 class="title">Pirate Day Adventure</h1>
+                <div class="pirate-elements">🏴‍☠️ ⚓ 🦜 💰 🗡️ 🏴‍☠️</div>
+            </div>
+            
+            <div class="main-info">
+                <div class="date-time">📅 December 17</div>
+                <div class="time">⏰ 3pm–4pm</div>
+                <div class="location">📍 Main Plaza</div>
+            </div>
+            
+            <div class="decorative-elements">
+                🌟 ✨ 🎨 🌈 🎭 🎪 🎠 🎡 🌟
+            </div>
+            
+            <div class="theme-highlight">
+                <div class="theme-title">🏴‍☠️ AHOY MATEYS! 🏴‍☠️</div>
+                <div class="theme-description">
+                    Join us for a swashbuckling adventure filled with treasure hunts, 
+                    pirate games, and nautical fun for all little buccaneers!
+                </div>
+            </div>
+            
+            <div class="decorative-elements">
+                🎉 🎊 🎈 ⭐ 🌙 ☀️ 🌺 🦄 🎉
+            </div>
+            
+            <div class="footer">
+                <div class="call-to-action">
+                    🎯 Set Sail for Fun! 🎯
+                </div>
+                <div class="contact-info">
+                    📞 For more information: [Contact Details]<br>
+                    🌐 Visit our website: [Website URL]
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hot Cocoa Tasting Festival Poster</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Merriweather:wght@300;400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        @media print {
+            body { 
+                margin: 0; 
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+        }
+        
+        body {
+            font-family: 'Merriweather', 'Georgia', serif;
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 25%, #CD853F 50%, #DEB887 75%, #F4E4BC 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .poster {
+            width: 8.5in;
+            height: 11in;
+            background: linear-gradient(145deg, #FFF8DC 0%, #FFFAF0 30%, #FDF5E6 70%, #FAF0E6 100%);
+            border: 8px solid #8B4513;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(139, 69, 19, 0.3);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .decorative-border {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 3px solid #CD853F;
+            border-radius: 10px;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(205, 133, 63, 0.1) 10px,
+                rgba(205, 133, 63, 0.1) 20px
+            );
+        }
+        
+        .header {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .festival-label {
+            font-size: 18px;
+            color: #8B4513;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+        
+        .event-title {
+            font-family: 'Playfair Display', 'Times New Roman', serif;
+            font-size: 3.5rem;
+            color: #8B4513;
+            font-weight: 900;
+            text-shadow: 3px 3px 6px rgba(139, 69, 19, 0.2);
+            margin-bottom: 20px;
+            line-height: 1.1;
+            text-align: center;
+        }
+        
+        .cocoa-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            font-size: 2rem;
+        }
+        
+        .cocoa-icon {
+            background: linear-gradient(145deg, #D2691E, #CD853F);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+            transform: rotate(15deg);
+        }
+        
+        .cocoa-icon:nth-child(even) {
+            transform: rotate(-15deg);
+        }
+        
+        .main-content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+            margin: 30px 0;
+        }
+        
+        .date-time {
+            font-size: 1.8rem;
+            color: #8B4513;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #FFE4B5, #FFEFD5, #FFE4B5);
+            padding: 15px 30px;
+            border-radius: 25px;
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.2);
+            border: 2px solid #D2691E;
+        }
+        
+        .location {
+            font-size: 1.5rem;
+            color: #A0522D;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+        
+        .event-type {
+            background: linear-gradient(135deg, #FF6347, #FF7F50);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(255, 99, 71, 0.4);
+        }
+        
+        .cadbury-highlight {
+            background: linear-gradient(135deg, #4B0082, #663399, #8A2BE2);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin: 30px 0;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(75, 0, 130, 0.4);
+            border: 3px solid #FFD700;
+        }
+        
+        .cadbury-highlight::before {
+            content: '✨';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 2rem;
+            animation: sparkle 2s infinite;
+        }
+        
+        .cadbury-highlight::after {
+            content: '✨';
+            position: absolute;
+            bottom: -10px;
+            right: 20px;
+            font-size: 2rem;
+            animation: sparkle 2s infinite 1s;
+        }
+        
+        .featured-label {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+        
+        .cadbury-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .decorative-elements {
+            position: absolute;
+            font-size: 1.5rem;
+            color: rgba(139, 69, 19, 0.3);
+            z-index: 1;
+        }
+        
+        .element-1 { top: 100px; left: 50px; transform: rotate(20deg); }
+        .element-2 { top: 200px; right: 40px; transform: rotate(-30deg); }
+        .element-3 { bottom: 200px; left: 30px; transform: rotate(45deg); }
+        .element-4 { bottom: 100px; right: 60px; transform: rotate(-15deg); }
+        .element-5 { top: 300px; left: 20px; transform: rotate(60deg); }
+        .element-6 { top: 400px; right: 20px; transform: rotate(-45deg); }
+        
+        .footer {
+            text-align: center;
+            color: #8B4513;
+            font-size: 1.1rem;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .contact-info {
+            background: rgba(255, 228, 181, 0.8);
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px dashed #CD853F;
+            margin-top: 20px;
+        }
+        
+        .steam {
+            position: absolute;
+            top: 50px;
+            right: 80px;
+            font-size: 1.2rem;
+            color: rgba(139, 69, 19, 0.4);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 0.7; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        
+        @media screen and (max-width: 768px) {
+            body { padding: 10px; }
+            .poster { 
+                width: 95vw; 
+                height: auto; 
+                min-height: 95vh;
+                padding: 20px;
+            }
+            .event-title { font-size: 2.5rem; }
+            .date-time { font-size: 1.4rem; }
+            .cadbury-text { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <div class="decorative-border"></div>
+        
+        <!-- Decorative Elements -->
+        <div class="decorative-elements element-1">☕</div>
+        <div class="decorative-elements element-2">🍫</div>
+        <div class="decorative-elements element-3">🎭</div>
+        <div class="decorative-elements element-4">☕</div>
+        <div class="decorative-elements element-5">🍫</div>
+        <div class="decorative-elements element-6">🎪</div>
+        
+        <div class="steam">☁️ ☁️</div>
+        
+        <div class="header">
+            <div class="festival-label">Food Festival Event</div>
+            <h1 class="event-title">Hot Cocoa Tasting</h1>
+            
+            <div class="cocoa-icons">
+                <div class="cocoa-icon">☕</div>
+                <div class="cocoa-icon">🍫</div>
+                <div class="cocoa-icon">☕</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="date-time">December 15 • 2PM–4PM</div>
+            <div class="location">📍 Main Plaza</div>
+            
+            <div class="event-type">🍽️ Food Experience</div>
+            
+            <div class="cadbury-highlight">
+                <div class="featured-label">Featured Delicacy</div>
+                <div class="cadbury-text">Cadbury Special</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div style="font-size: 1.3rem; margin-bottom: 15px; color: #A0522D;">
+                🎪 Join us for an unforgettable tasting experience! 🎪
+            </div>
+            
+            <div class="contact-info">
+                <strong>For More Information</strong><br>
+                Visit our festival website or contact event organizers<br>
+                📧 info@festival.com • 📞 (555) 123-FEST
+            </div>
+        </div>
+    </div>
+</body>
+</html>

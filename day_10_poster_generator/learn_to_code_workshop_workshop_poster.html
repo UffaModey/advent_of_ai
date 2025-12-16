@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn to Code Workshop - Tech Hub Festival</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .poster {
+            width: 8.5in;
+            height: 11in;
+            background: linear-gradient(145deg, #f8fffe 0%, #e8f5f3 100%);
+            border: 8px solid #2d7d6b;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 4px #1a5d4f;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+        }
+        
+        .poster::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(45, 125, 107, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(76, 175, 80, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 60% 20%, rgba(0, 150, 136, 0.08) 0%, transparent 25%);
+            z-index: 1;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .festival-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #ff6b35, #ff8e53);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .event-type {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: inline-block;
+            box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .main-title {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #2d7d6b, #1a5d4f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            line-height: 1.1;
+        }
+        
+        .subtitle {
+            font-size: 24px;
+            color: #555;
+            font-weight: 400;
+            margin-bottom: 40px;
+        }
+        
+        .level-indicator {
+            background: linear-gradient(45deg, #00bcd4, #26c6da);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+        
+        .details-section {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .detail-item {
+            background: rgba(255, 255, 255, 0.9);
+            margin: 8px 0;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+        }
+        
+        .detail-item.date {
+            border-left-color: #ff6b35;
+        }
+        
+        .detail-item.location {
+            border-left-color: #4caf50;
+        }
+        
+        .detail-item.industry {
+            border-left-color: #2196f3;
+        }
+        
+        .icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .icon.date {
+            background: linear-gradient(45deg, #ff6b35, #ff8e53);
+        }
+        
+        .icon.location {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+        }
+        
+        .icon.industry {
+            background: linear-gradient(45deg, #2196f3, #42a5f5);
+        }
+        
+        .learning-goals {
+            background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border: 2px solid #4caf50;
+        }
+        
+        .learning-goals h3 {
+            color: #2d7d6b;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .goals-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+        
+        .goal-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+        }
+        
+        .goal-item::before {
+            content: '💡';
+            margin-right: 8px;
+        }
+        
+        .tech-elements {
+            position: absolute;
+            font-size: 40px;
+            opacity: 0.1;
+            z-index: 1;
+        }
+        
+        .gear1 {
+            top: 15%;
+            left: 10%;
+            animation: rotate 20s linear infinite;
+        }
+        
+        .gear2 {
+            top: 70%;
+            right: 8%;
+            animation: rotate 15s linear infinite reverse;
+        }
+        
+        .lightbulb {
+            top: 40%;
+            left: 5%;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        .code {
+            top: 25%;
+            right: 12%;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 30px;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.1; transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(1.1); }
+        }
+        
+        .cta-section {
+            background: linear-gradient(45deg, #2d7d6b, #1a5d4f);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .cta-text {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .contact-placeholder {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .poster {
+                width: 8.5in;
+                height: 11in;
+                box-shadow: none;
+                border: 2px solid #2d7d6b;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .poster {
+                width: 95vw;
+                height: auto;
+                min-height: 90vh;
+                padding: 30px 25px;
+            }
+            
+            .main-title {
+                font-size: 36px;
+            }
+            
+            .detail-item {
+                font-size: 18px;
+                padding: 15px;
+            }
+            
+            .goals-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <div class="festival-badge">FESTIVAL EVENT</div>
+        
+        <div class="tech-elements gear1">⚙️</div>
+        <div class="tech-elements gear2">⚙️</div>
+        <div class="tech-elements lightbulb">💡</div>
+        <div class="tech-elements code">&lt;/&gt;</div>
+        
+        <div class="content">
+            <div class="header">
+                <div class="event-type">WORKSHOP</div>
+                <h1 class="main-title">Learn to Code</h1>
+                <h2 class="main-title">Workshop</h2>
+                <p class="subtitle">Start Your Programming Journey</p>
+                <div class="level-indicator">🎯 BEGINNER FRIENDLY</div>
+            </div>
+            
+            <div class="details-section">
+                <div class="detail-item date">
+                    <div class="icon date">📅</div>
+                    <div>
+                        <strong>Wednesday, December 10th</strong><br>
+                        7:00 PM
+                    </div>
+                </div>
+                
+                <div class="detail-item location">
+                    <div class="icon location">📍</div>
+                    <div>
+                        <strong>Tech Hub</strong><br>
+                        Interactive Learning Space
+                    </div>
+                </div>
+                
+                <div class="detail-item industry">
+                    <div class="icon industry">💻</div>
+                    <div>
+                        <strong>Technology Focused</strong><br>
+                        Modern Programming Concepts
+                    </div>
+                </div>
+                
+                <div class="learning-goals">
+                    <h3>🚀 What You'll Learn (Beginner Level)</h3>
+                    <div class="goals-list">
+                        <div class="goal-item">Programming Basics</div>
+                        <div class="goal-item">Problem Solving</div>
+                        <div class="goal-item">Code Structure</div>
+                        <div class="goal-item">Best Practices</div>
+                        <div class="goal-item">Hands-on Projects</div>
+                        <div class="goal-item">Tech Career Paths</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cta-section">
+                <div class="cta-text">Ready to Start Coding?</div>
+                <div class="contact-placeholder">Register Now • Contact: [Your Information Here]</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -2,7 +2,7 @@ version: 1.0.0
 title: Festival Poster Generator
 description: Generate customized, polished festival posters with conditional styling based on event type
 
-instructions: |
+prompt: |
   You are a professional graphic designer specializing in festival posters. Create a stunning, festival-themed HTML poster for the given event and save it to the current directory.
 
   **Event Details:**
