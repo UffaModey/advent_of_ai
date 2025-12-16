@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirate Adventure Day - Kids Event</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Comic Sans MS', fantasy, cursive;
+            background: linear-gradient(45deg, #001f3f, #2e86c1, #85c1e9);
+            background-size: 400% 400%;
+            animation: waveAnimation 8s ease-in-out infinite;
+            min-height: 100vh;
+        }
+
+        @keyframes waveAnimation {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .poster {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #f4d03f, #f7dc6f, #fcf3cf);
+            border: 8px solid #8b4513;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .poster::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0iIzMzMzMzMyIgZmlsbC1vcGFjaXR5PSIwLjEiLz4KPHN2Zz4K') repeat;
+            animation: float 20s linear infinite;
+            opacity: 0.1;
+        }
+
+        @keyframes float {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .header {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title {
+            font-size: 3.5em;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .subtitle {
+            font-size: 1.8em;
+            margin: 10px 0 0 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px #ffff00; }
+            to { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 20px #ffff00, 0 0 30px #ffff00; }
+        }
+
+        .main-content {
+            padding: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pirate-ship {
+            text-align: center;
+            font-size: 4em;
+            margin: 20px 0;
+            animation: rock 4s ease-in-out infinite;
+        }
+
+        @keyframes rock {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        .event-details {
+            background: rgba(255, 255, 255, 0.9);
+            border: 4px solid #8b4513;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: inset 0 0 20px rgba(139, 69, 19, 0.2);
+        }
+
+        .detail-item {
+            font-size: 1.4em;
+            margin: 15px 0;
+            color: #2c3e50;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .detail-item .emoji {
+            font-size: 1.5em;
+            margin-right: 15px;
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .activities {
+            margin: 25px 0;
+        }
+
+        .activities h3 {
+            color: #e74c3c;
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transform: scale(1);
+            transition: transform 0.3s ease;
+        }
+
+        .activity-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .treasure-box {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            border: 3px solid #8b4513;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .treasure-box::before {
+            content: "💎✨💰✨💎";
+            position: absolute;
+            top: -5px;
+            left: 0;
+            right: 0;
+            font-size: 1.5em;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .treasure-box h3 {
+            color: white;
+            margin-top: 10px;
+            font-size: 1.8em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .treasure-box p {
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 1.1em;
+        }
+
+        .contact-info {
+            margin: 10px 0;
+        }
+
+        .skull-crossbones {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 2em;
+            animation: wobble 3s ease-in-out infinite;
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        .treasure-map {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 2em;
+            animation: treasure-glow 4s ease-in-out infinite;
+        }
+
+        @keyframes treasure-glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.5) drop-shadow(0 0 10px gold); }
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <div class="skull-crossbones">☠️</div>
+        <div class="treasure-map">🗺️</div>
+        
+        <div class="header">
+            <h1 class="title">Pirate Adventure Day</h1>
+            <p class="subtitle">Ahoy There, Young Pirates!</p>
+        </div>
+
+        <div class="main-content">
+            <div class="pirate-ship">🏴‍☠️⛵🏴‍☠️</div>
+
+            <div class="event-details">
+                <div class="detail-item">
+                    <span class="emoji">📅</span>
+                    <span>Sunday, June 15th</span>
+                </div>
+                <div class="detail-item">
+                    <span class="emoji">⏰</span>
+                    <span>2:00 PM</span>
+                </div>
+                <div class="detail-item">
+                    <span class="emoji">📍</span>
+                    <span>City Park</span>
+                </div>
+                <div class="detail-item">
+                    <span class="emoji">👶</span>
+                    <span>Kids Event - All Ages Welcome!</span>
+                </div>
+                <div class="detail-item">
+                    <span class="emoji">🎯</span>
+                    <span>Pirate Theme Adventure</span>
+                </div>
+            </div>
+
+            <div class="activities">
+                <h3>🏴‍☠️ Pirate Adventures Await 🏴‍☠️</h3>
+                <div class="activity-grid">
+                    <div class="activity-card">
+                        🗺️<br>Treasure Hunt
+                    </div>
+                    <div class="activity-card">
+                        ⚔️<br>Pirate Training
+                    </div>
+                    <div class="activity-card">
+                        🎨<br>Flag Making
+                    </div>
+                    <div class="activity-card">
+                        🏴‍☠️<br>Face Painting
+                    </div>
+                    <div class="activity-card">
+                        🎭<br>Costume Contest
+                    </div>
+                    <div class="activity-card">
+                        🍖<br>Pirate Feast
+                    </div>
+                </div>
+            </div>
+
+            <div class="treasure-box">
+                <h3>🏆 Arrr! Special Treasure Awaits! 🏆</h3>
+                <p>Every brave pirate will discover amazing treasures and earn their official pirate certificate!</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="contact-info">
+                <strong>🏴‍☠️ Come dressed as your favorite pirate! 🏴‍☠️</strong>
+            </div>
+            <div class="contact-info">
+                Costumes encouraged but not required
+            </div>
+            <p style="margin-top: 15px; font-style: italic;">
+                "Set sail for adventure at City Park! All young buccaneers welcome aboard!"
+            </p>
+        </div>
+    </div>
+</body>
+</html>

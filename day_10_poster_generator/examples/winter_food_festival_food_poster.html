@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winter Food Festival Poster</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #2c3e50, #3498db, #e74c3c);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .poster {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #ecf0f1, #bdc3c7);
+            border-radius: 25px;
+            padding: 50px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #c0392b;
+        }
+        
+        .poster::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90" opacity="0.03">❄️</text></svg>') repeat;
+            animation: snow 25s linear infinite;
+            z-index: 0;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 4em;
+            color: #c0392b;
+            margin-bottom: 15px;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        
+        .subtitle {
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-weight: 300;
+            font-style: italic;
+        }
+        
+        .winter-icons {
+            font-size: 5em;
+            margin: 30px 0;
+            letter-spacing: 25px;
+            opacity: 0.8;
+        }
+        
+        .event-details {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            margin: 40px 0;
+            font-size: 1.4em;
+            line-height: 2;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border: 3px solid #fff;
+        }
+        
+        .date-time {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #c0392b;
+            margin: 25px 0;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .location {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin: 20px 0;
+            font-weight: 600;
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px dashed #c0392b;
+        }
+        
+        .special-feature {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border: 3px solid #fff;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .feature {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border: 2px solid #fff;
+        }
+        
+        .cta {
+            background: linear-gradient(45deg, #27ae60, #229954);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            font-size: 1.3em;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border: 3px solid #fff;
+        }
+        
+        @keyframes snow {
+            0% { transform: translateY(-100px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+        
+        .winter-border {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 600px) {
+            .poster {
+                padding: 30px;
+            }
+            h1 {
+                font-size: 2.8em;
+            }
+            .subtitle {
+                font-size: 1.6em;
+            }
+            .event-details {
+                font-size: 1.2em;
+                padding: 25px;
+            }
+            .date-time {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <div class="winter-border"></div>
+        <div class="content">
+            <h1>❄️ Winter Food Festival ❄️</h1>
+            <div class="subtitle">Warm Your Soul with Winter Delights</div>
+            
+            <div class="winter-icons">🍲🥧🍯☕🧣</div>
+            
+            <div class="date-time">Saturday, December 21st<br>at 6:00 PM</div>
+            
+            <div class="location">
+                📍 Downtown Community Center
+            </div>
+            
+            <div class="event-details">
+                Join us for a cozy evening celebrating the flavors of winter!<br>
+                Experience comfort foods from around the world<br>
+                Perfect for the whole family on the winter solstice
+            </div>
+            
+            <div class="special-feature">
+                🍎 FEATURED DELICACY 🍎<br>
+                Hot Apple Cider<br>
+                <em>Freshly made with local apples & warm spices</em>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature">
+                    🔥 <strong>Hearty Soups</strong><br>
+                    Warm up with our selection of winter soups
+                </div>
+                <div class="feature">
+                    🥧 <strong>Seasonal Pies</strong><br>
+                    Apple, pumpkin & winter berry desserts
+                </div>
+                <div class="feature">
+                    ☕ <strong>Hot Beverages</strong><br>
+                    Mulled wine, hot chocolate & specialty teas
+                </div>
+                <div class="feature">
+                    🎵 <strong>Live Music</strong><br>
+                    Acoustic performances & holiday classics
+                </div>
+            </div>
+            
+            <div class="cta">
+                🎫 FREE ADMISSION 🎫<br>
+                Bring your family and friends!<br>
+                Food and beverages available for purchase
+            </div>
+            
+            <div style="margin-top: 30px; font-size: 1.4em; color: #c0392b; font-weight: bold;">
+                Celebrate Winter's Bounty with Us! ❄️🍴
+            </div>
+            
+            <div style="margin-top: 20px; font-size: 1em; color: #7f8c8d;">
+                For more information: info@downtowncommunitycenter.org
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,156 @@
+version: 1.0.0
+title: Festival Poster Generator
+description: Generate customized, polished festival posters with conditional styling based on event type
+
+instructions: |
+  You are a professional graphic designer specializing in festival posters. Create a stunning, festival-themed HTML poster for the given event and save it to the current directory.
+
+  **Event Details:**
+  - Name: {{ event_name }}
+  - Date & Time: {{ event_datetime }}
+  - Location: {{ location }}
+  - Type: {{ event_type }}
+  {% if event_type == 'food' and local_delicacy %}
+  - Featured Delicacy: {{ local_delicacy }}
+  {% endif %}
+  {% if event_type == 'kids' and theme %}
+  - Theme: {{ theme }}
+  {% endif %}
+  {% if event_type == 'workshop' and industry %}
+  - Industry: {{ industry }}
+  {% endif %}
+  {% if event_type == 'workshop' and level %}
+  - Level: {{ level }}
+  {% endif %}
+
+  **Design Requirements:**
+  
+  {% if event_type == 'food' %}
+  **Food Event Styling:**
+  - Use warm, inviting colors (rich oranges, warm yellows, deep reds, browns)
+  - Include food-related decorative elements and icons
+  - Use elegant, appetizing fonts
+  - Create a cozy, welcoming atmosphere
+  {% if local_delicacy %}
+  - Prominently feature "{{ local_delicacy }}" as a highlight
+  - Add visual elements that represent this delicacy
+  {% endif %}
+  
+  {% elif event_type == 'kids' %}
+  **Kids Event Styling:**
+  - Use bright, playful colors (rainbow colors, pastels)
+  - Include fun emoji and child-friendly illustrations
+  - Use rounded, friendly fonts
+  - Add playful decorative elements (stars, balloons, confetti)
+  {% if theme %}
+  - Design around the "{{ theme }}" theme with relevant imagery and colors
+  - Include theme-specific decorative elements
+  {% endif %}
+  
+  {% elif event_type == 'performance' %}
+  **Performance Event Styling:**
+  - Use elegant, refined colors (deep purples, golds, silvers, blacks)
+  - Include artistic, sophisticated design elements
+  - Use classical, elegant typography
+  - Add performance-related imagery (musical notes, theater masks, spotlights)
+  - Create a sense of prestige and artistry
+  
+  {% elif event_type == 'competition' %}
+  **Competition Event Styling:**
+  - Use bold, energetic colors (bright reds, electric blues, bold yellows)
+  - Include dynamic, action-oriented design elements
+  - Use strong, impactful fonts
+  - Add competitive imagery (trophies, medals, lightning bolts)
+  - Create excitement and energy
+  
+  {% elif event_type == 'workshop' %}
+  **Workshop Event Styling:**
+  - Use creative, instructional colors (teals, greens, warm grays, accent colors)
+  - Include educational and creative design elements
+  - Use clear, readable fonts
+  - Add workshop-related imagery (tools, lightbulbs, gears, books)
+  {% if industry and level %}
+  - Tailor design to {{ industry }} industry
+  - Include "{{ level }}" level indicators
+  - Add text about learning goals appropriate for {{ level }} {{ industry }} participants
+  {% endif %}
+  {% endif %}
+
+  **Technical Requirements:**
+  1. Create a complete HTML file with embedded CSS
+  2. Make it print-friendly (8.5" x 11" portrait orientation)
+  3. Ensure text is large enough to read from a distance
+  4. Use web-safe fonts with fallbacks
+  5. Include proper spacing and visual hierarchy
+  6. Make it responsive for different screen sizes
+  7. Add subtle shadows and gradients for depth
+  8. Include a border or frame design
+
+  **Content Structure:**
+  - Eye-catching header with event name
+  - Prominent date, time, and location
+  - Event type clearly indicated
+  - Any special features (delicacy, theme, industry/level) highlighted
+  - Festival-appropriate decorative elements
+  - Call-to-action or contact information area (placeholder)
+
+  Create a professional, polished poster that would look great both printed and shared digitally. The design should immediately convey the event type and create excitement for the festival.
+
+  Save the HTML file with filename: {{ event_name | replace(' ', '_') | lower }}_{{ event_type }}_poster.html
+
+  Return ONLY the complete HTML code - no explanations or markdown formatting.
+
+parameters:
+- key: event_name
+  input_type: string
+  requirement: required
+  description: Name of the festival event
+  default: ""
+  
+- key: event_datetime
+  input_type: string
+  requirement: required
+  description: Date and time of the event (e.g., 'Saturday, December 21st at 7:00 PM')
+  default: ""
+  
+- key: location
+  input_type: string
+  requirement: required
+  description: Event location/venue
+  default: ""
+  
+- key: event_type
+  input_type: select
+  requirement: required
+  description: Type of event
+  default: "food"
+  options:
+  - food
+  - kids
+  - performance
+  - competition
+  - workshop
+  
+- key: local_delicacy
+  input_type: string
+  requirement: optional
+  description: Special local food to showcase (only for food events)
+  default: ""
+  
+- key: theme
+  input_type: string
+  requirement: optional
+  description: Theme for kids event (e.g., 'Pirates', 'Dinosaurs', 'Space Adventure')
+  default: ""
+  
+- key: industry
+  input_type: string
+  requirement: optional
+  description: Industry or field for workshop (e.g., 'Technology', 'Arts & Crafts', 'Cooking')
+  default: ""
+  
+- key: level
+  input_type: string
+  requirement: optional
+  description: Skill level for workshop (e.g., 'Beginner', 'Intermediate', 'Advanced')
+  default: ""

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Dance Battle - Competition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fredoka+One:wght@400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Fredoka One', cursive;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
+            background-size: 400% 400%;
+            animation: gradientShift 4s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .poster-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(3rem, 8vw, 6rem);
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 0, 110, 0.6);
+            margin: 20px 0;
+            animation: pulse 2s ease-in-out infinite alternate;
+            letter-spacing: 3px;
+        }
+        
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+        
+        .subtitle {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            color: #ffff00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 30px;
+            animation: bounce 3s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .dancing-figures {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .dancer {
+            font-size: 4rem;
+            animation: dance 1.5s ease-in-out infinite;
+            margin: 10px;
+        }
+        
+        .dancer:nth-child(1) { animation-delay: 0s; }
+        .dancer:nth-child(2) { animation-delay: 0.3s; }
+        .dancer:nth-child(3) { animation-delay: 0.6s; }
+        .dancer:nth-child(4) { animation-delay: 0.9s; }
+        
+        @keyframes dance {
+            0%, 100% { transform: rotate(-10deg) scale(1); }
+            25% { transform: rotate(10deg) scale(1.1); }
+            50% { transform: rotate(-5deg) scale(0.9); }
+            75% { transform: rotate(5deg) scale(1.1); }
+        }
+        
+        .event-details {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 3px solid #ffff00;
+            box-shadow: 0 0 30px rgba(255, 255, 0, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 30px rgba(255, 255, 0, 0.5); }
+            to { box-shadow: 0 0 50px rgba(255, 255, 0, 0.8); }
+        }
+        
+        .event-item {
+            color: #ffffff;
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .event-item .icon {
+            font-size: 1.5em;
+            animation: spin 3s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .competition-badge {
+            background: linear-gradient(135deg, #ff6b6b, #ffd93d);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 3px solid #ffffff;
+            transform: rotate(-2deg);
+            animation: wiggle 4s ease-in-out infinite;
+        }
+        
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-2deg); }
+            25% { transform: rotate(1deg); }
+            50% { transform: rotate(-1deg); }
+            75% { transform: rotate(0deg); }
+        }
+        
+        .competition-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 15px;
+        }
+        
+        .competition-text {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: #000000;
+            font-weight: 600;
+            text-shadow: 1px 1px 0px #ffffff;
+        }
+        
+        .register-button {
+            background: linear-gradient(45deg, #ff3366, #ff6b35);
+            color: white;
+            font-family: 'Fredoka One', cursive;
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            padding: 20px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 30px 0;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            animation: buttonPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes buttonPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 10px 20px rgba(255, 51, 102, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 15px 30px rgba(255, 51, 102, 0.5); }
+        }
+        
+        .register-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 30px rgba(255, 51, 102, 0.5);
+        }
+        
+        .footer-text {
+            color: #ffffff;
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            margin-top: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+        
+        /* Floating animation elements */
+        .floating-note {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        .note1 { top: 20%; left: 10%; animation-delay: 0s; }
+        .note2 { top: 60%; right: 15%; animation-delay: 2s; }
+        .note3 { top: 40%; left: 5%; animation-delay: 4s; }
+        .note4 { top: 80%; right: 10%; animation-delay: 1s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            25% { transform: translateY(-20px) rotate(90deg); opacity: 1; }
+            50% { transform: translateY(-10px) rotate(180deg); opacity: 0.8; }
+            75% { transform: translateY(-30px) rotate(270deg); opacity: 0.9; }
+        }
+        
+        /* Energy burst effect */
+        .energy-burst {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,0,0.8) 0%, transparent 70%);
+            animation: burst 3s ease-out infinite;
+            pointer-events: none;
+        }
+        
+        .burst1 { top: 30%; left: 20%; animation-delay: 0s; }
+        .burst2 { top: 70%; right: 25%; animation-delay: 1.5s; }
+        
+        @keyframes burst {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .dancing-figures {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .dancer {
+                font-size: 3rem;
+                margin: 5px;
+            }
+            
+            .event-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .competition-badge {
+                transform: rotate(0deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-note note1">♪</div>
+    <div class="floating-note note2">♫</div>
+    <div class="floating-note note3">♪</div>
+    <div class="floating-note note4">♫</div>
+    
+    <div class="energy-burst burst1"></div>
+    <div class="energy-burst burst2"></div>
+    
+    <div class="poster-container">
+        <h1 class="title">ULTIMATE<br>DANCE BATTLE</h1>
+        <h2 class="subtitle">🔥 EPIC COMPETITION 🔥</h2>
+        
+        <div class="dancing-figures">
+            <div class="dancer">🕺</div>
+            <div class="dancer">💃</div>
+            <div class="dancer">🕺</div>
+            <div class="dancer">💃</div>
+        </div>
+        
+        <div class="event-details">
+            <div class="event-item">
+                <span class="icon">📅</span>
+                <span><strong>DATE:</strong> Saturday, November 5th</span>
+            </div>
+            <div class="event-item">
+                <span class="icon">⏰</span>
+                <span><strong>TIME:</strong> 3:00 PM</span>
+            </div>
+            <div class="event-item">
+                <span class="icon">📍</span>
+                <span><strong>LOCATION:</strong> Community Sports Center</span>
+            </div>
+            <div class="event-item">
+                <span class="icon">🏆</span>
+                <span><strong>EVENT TYPE:</strong> Competition</span>
+            </div>
+            <div class="event-item">
+                <span class="icon">🎪</span>
+                <span><strong>CATEGORIES:</strong> All Dance Styles Welcome</span>
+            </div>
+        </div>
+        
+        <div class="competition-badge">
+            <div class="competition-title">🏆 COMPETITION 🏆</div>
+            <div class="competition-text">
+                CASH PRIZES<br>
+                TROPHIES<br>
+                GLORY & FAME!
+            </div>
+        </div>
+        
+        <button class="register-button" onclick="alert('Ready to compete? Contact Community Sports Center for registration details!')">
+            ENTER THE BATTLE!
+        </button>
+        
+        <div class="footer-text">
+            <strong>Registration:</strong> Community Sports Center<br>
+            <strong>Info:</strong> Call for details & entry requirements<br>
+            <em>"Show Your Moves, Win Your Glory!"</em><br>
+            <strong>🔥 Bring Your A-Game 🔥</strong>
+        </div>
+    </div>
+    
+    <script>
+        // Add interactive dance battle effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create additional floating elements
+            function createFloatingElement() {
+                const elements = ['💥', '⚡', '🔥', '✨', '🎵', '🎶', '⭐', '💫'];
+                const element = document.createElement('div');
+                element.textContent = elements[Math.floor(Math.random() * elements.length)];
+                element.style.position = 'fixed';
+                element.style.fontSize = '2rem';
+                element.style.color = 'rgba(255, 255, 255, 0.9)';
+                element.style.pointerEvents = 'none';
+                element.style.zIndex = '-1';
+                element.style.left = Math.random() * 100 + 'vw';
+                element.style.top = '100vh';
+                element.style.animation = 'floatUp 6s linear infinite';
+                
+                document.body.appendChild(element);
+                
+                setTimeout(() => {
+                    element.remove();
+                }, 6000);
+            }
+            
+            // Add CSS for floating up animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes floatUp {
+                    from { 
+                        transform: translateY(0) rotate(0deg);
+                        opacity: 1;
+                    }
+                    to { 
+                        transform: translateY(-120vh) rotate(720deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Create floating elements periodically
+            setInterval(createFloatingElement, 1500);
+        });
+        
+        // Add click effects to dancers for battle mode
+        document.querySelectorAll('.dancer').forEach((dancer, index) => {
+            dancer.addEventListener('click', function() {
+                this.style.animation = 'none';
+                this.offsetHeight; // Trigger reflow
+                this.style.animation = `dance 0.3s ease-in-out ${index * 0.1}s`;
+                
+                // Create explosion effect
+                const explosion = document.createElement('div');
+                explosion.textContent = '💥';
+                explosion.style.position = 'absolute';
+                explosion.style.fontSize = '3rem';
+                explosion.style.pointerEvents = 'none';
+                explosion.style.animation = 'explode 1s ease-out forwards';
+                explosion.style.left = '50%';
+                explosion.style.top = '50%';
+                explosion.style.transform = 'translate(-50%, -50%)';
+                
+                this.style.position = 'relative';
+                this.appendChild(explosion);
+                
+                setTimeout(() => explosion.remove(), 1000);
+            });
+        });
+        
+        // Add explosion animation
+        const explosionStyle = document.createElement('style');
+        explosionStyle.textContent = `
+            @keyframes explode {
+                0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+                50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.8; }
+                100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(explosionStyle);
+        
+        // Add battle sound effects simulation (visual feedback)
+        let battleMode = false;
+        document.body.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                battleMode = !battleMode;
+                document.body.style.animation = battleMode ? 
+                    'gradientShift 0.5s ease infinite' : 
+                    'gradientShift 4s ease infinite';
+            }
+        });
+    </script>
+</body>
+</html>
