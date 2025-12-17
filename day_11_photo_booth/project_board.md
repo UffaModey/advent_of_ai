@@ -1,224 +1,228 @@
-# Fun House Photo Booth - Sprint Project Board
-*40-minute development sprint | Team coordination board*
+# Fun House Photo Booth MVP - Project Board
+## 40-Minute Sprint Plan
 
-## 🚀 Sprint Overview
-**Goal**: Build working photo booth with festive face filters  
-**Timeline**: 40 minutes total  
-**Team**: 6 specialized agents working in parallel and sequential phases  
-
----
-
-## 📋 Task Breakdown by Agent
-
-### 🔧 **Core App Builder** 
-*Priority: HIGH | Dependencies: None | Time: 15 minutes*
-
-#### **Phase 1: Foundation (0-10 min) - PARALLEL**
-- [ ] **CAB-001** Create project file structure (2 min)
-  - `index.html`, `style.css`, `script.js`
-  - `/filters` directory for assets
-  
-- [ ] **CAB-002** Implement camera access (5 min)
-  - getUserMedia() WebRTC integration
-  - Video stream display
-  - Camera permission handling
-  
-- [ ] **CAB-003** Basic HTML structure (3 min)
-  - Video element for camera feed
-  - Canvas for photo capture
-  - Filter selection buttons
-  - Capture/download buttons
-
-#### **Phase 2: Core Features (10-25 min) - DEPENDS ON FE**
-- [ ] **CAB-004** Photo capture functionality (5 min)
-  - Canvas-based photo capture
-  - Display captured photo
-  - Basic download mechanism
+### 🕐 Sprint Timeline Overview
+- **Total Duration**: 40 minutes
+- **Team Size**: 6 specialist agents
+- **Delivery**: Working MVP with 2-3 filters
 
 ---
 
-### 🎨 **Filter Engineer**
-*Priority: HIGH | Dependencies: CAB-002 | Time: 15 minutes*
+## 🎯 Sprint Phases
 
-#### **Phase 1: Setup (5-15 min) - AFTER CAB-002**
-- [ ] **FE-001** Integrate face detection library (5 min)
-  - Add face-api.js CDN link
-  - Initialize face detection models
-  - Test basic face landmark detection
-  
-#### **Phase 2: Filter Implementation (15-25 min) - PARALLEL**
-- [ ] **FE-002** Create snowflake crown filter (4 min)
-  - PNG overlay positioning
-  - Scale to face width
-  
-- [ ] **FE-003** Create reindeer antlers filter (3 min)
-  - Position above forehead
-  - Rotate with head tilt
-  
-- [ ] **FE-004** Create beard overlay filter (3 min)
-  - Position on lower face
-  - Blend with face detection
+### Phase 1: Foundation Setup (0-10 minutes)
+**Parallel work for rapid start**
+
+### Phase 2: Core Development (10-25 minutes) 
+**Sequential dependencies for core features**
+
+### Phase 3: Enhancement & QA (25-35 minutes)
+**Parallel refinement work**
+
+### Phase 4: Final Polish (35-40 minutes)
+**Final touches and verification**
 
 ---
 
-### ✅ **QA Tester**
-*Priority: MEDIUM | Dependencies: Multiple | Time: 8 minutes*
+## 👥 Agent Tasks & Dependencies
 
-#### **Phase 2: Early Testing (15-20 min) - PARALLEL WITH FILTERS**
-- [ ] **QA-001** Camera functionality testing (3 min)
-  - Test on desktop browser
-  - Verify mobile camera access
-  - Check different browsers (Chrome, Safari)
-  
-#### **Phase 3: Integration Testing (25-35 min) - AFTER FILTERS**
-- [ ] **QA-002** Filter application testing (3 min)
-  - Test each filter with face detection
-  - Verify filter switching
-  
-- [ ] **QA-003** Photo capture testing (2 min)
-  - Test capture with different filters
-  - Verify download functionality
+### 🏗️ **Core App Builder** (Critical Path)
+**Priority**: HIGHEST | **Duration**: 20 minutes | **Phase**: 1-2
 
----
+#### Tasks:
+1. **[0-5min] HTML Foundation**
+   - Create index.html with mobile viewport
+   - Add camera preview video element
+   - Set up capture button and filter controls
+   - Include face-api.js CDN links
 
-### 💄 **Stylist**
-*Priority: MEDIUM | Dependencies: CAB-003 | Time: 10 minutes*
+2. **[5-10min] Camera Access**
+   - Implement getUserMedia for front camera
+   - Add camera permission handling
+   - Create video stream preview
+   - Handle iOS Safari compatibility
 
-#### **Phase 2: UI Styling (10-20 min) - PARALLEL WITH FE**
-- [ ] **STY-001** Festive theme implementation (5 min)
-  - Winter/holiday color scheme
-  - Snowflake background elements
-  - Festive button styling
-  
-- [ ] **STY-002** Mobile-responsive layout (3 min)
-  - Touch-friendly buttons (min 44px)
-  - Portrait orientation optimization
-  
-- [ ] **STY-003** Visual feedback states (2 min)
-  - Active filter highlighting
-  - Loading states for camera
+3. **[10-15min] Canvas Setup**
+   - Create overlay canvas for filters
+   - Set up video-to-canvas rendering pipeline
+   - Implement basic capture functionality
+
+4. **[15-20min] Photo Capture & Download**
+   - Canvas-to-image conversion
+   - Automatic download trigger
+   - File naming with timestamp
+
+**Dependencies**: None (starts immediately)
+**Blocks**: Filter Engineer (needs canvas setup)
 
 ---
 
-### ⚡ **Performance Optimizer**
-*Priority: LOW | Dependencies: FE-004 | Time: 5 minutes*
+### 🎭 **Filter Engineer** (Critical Path)
+**Priority**: HIGHEST | **Duration**: 15 minutes | **Phase**: 2
 
-#### **Phase 3: Optimization (25-30 min) - AFTER CORE FEATURES**
-- [ ] **PO-001** Image optimization (2 min)
-  - Compress filter PNG assets
-  - Optimize for mobile loading
-  
-- [ ] **PO-002** JavaScript optimization (2 min)
-  - Minimize face detection calls
-  - Optimize canvas rendering
-  
-- [ ] **PO-003** Loading performance (1 min)
-  - Lazy load face detection models
-  - Preload filter assets
+#### Tasks:
+1. **[10-15min] Face Detection Setup**
+   - Initialize face-api.js models
+   - Implement face landmark detection
+   - Test detection accuracy on mobile
+   - Add fallback for detection failures
 
----
+2. **[15-20min] Filter Implementation**
+   - Create 2 priority filters:
+     - **Snowflake Crown**: Simple forehead overlay
+     - **Reindeer Antlers**: Head-top positioning
+   - Implement filter switching logic
+   - Real-time rendering on canvas overlay
 
-### 📝 **Documentation Writer**
-*Priority: LOW | Dependencies: QA-003 | Time: 5 minutes*
+3. **[20-25min] Filter Optimization**
+   - Adjust positioning based on face size
+   - Smooth filter transitions
+   - Performance optimization for mobile
 
-#### **Phase 3: Documentation (30-35 min) - PARALLEL WITH FINAL TESTING**
-- [ ] **DOC-001** Create README.md (2 min)
-  - Project description
-  - Quick start instructions
-  
-- [ ] **DOC-002** User guide (2 min)
-  - How to use the photo booth
-  - Browser requirements
-  
-- [ ] **DOC-003** Deployment notes (1 min)
-  - GitHub Pages setup
-  - Local development instructions
+**Dependencies**: Core App Builder (canvas setup)
+**Blocks**: None
 
 ---
 
-## 🕐 Timeline & Dependencies
+### 🎨 **Stylist** (Enhancement)
+**Priority**: HIGH | **Duration**: 15 minutes | **Phase**: 1 & 3
 
-### **Minutes 0-10: Foundation Phase**
+#### Tasks:
+1. **[0-5min] Base CSS Setup**
+   - Mobile-first responsive layout
+   - Festive color scheme (reds, greens, golds)
+   - Touch-friendly button styling (44px minimum)
+
+2. **[25-30min] UI Polish**
+   - Filter selection buttons with icons
+   - Camera frame styling (polaroid effect)
+   - Loading states and animations
+   - Error message styling
+
+3. **[30-35min] Festive Enhancements**
+   - Christmas/winter theme implementation
+   - Subtle background patterns
+   - Button hover/active states
+   - Mobile gesture indicators
+
+**Dependencies**: Core App Builder (HTML structure)
+**Blocks**: None
+
+---
+
+### ⚡ **Performance Optimizer** (Enhancement)
+**Priority**: MEDIUM | **Duration**: 10 minutes | **Phase**: 3
+
+#### Tasks:
+1. **[25-30min] Performance Analysis**
+   - Test camera startup time
+   - Measure face detection frame rate
+   - Profile canvas rendering performance
+
+2. **[30-35min] Optimization Implementation**
+   - Throttle face detection (reduce to 15fps)
+   - Optimize canvas drawing operations
+   - Implement efficient filter caching
+   - Add performance monitoring
+
+**Dependencies**: Filter Engineer (filters working)
+**Blocks**: None
+
+---
+
+### 🧪 **QA Tester** (Validation)
+**Priority**: MEDIUM | **Duration**: 10 minutes | **Phase**: 3
+
+#### Tasks:
+1. **[25-30min] Cross-Device Testing**
+   - Test on iOS Safari (primary target)
+   - Test on Android Chrome
+   - Verify camera permissions flow
+   - Test filter switching functionality
+
+2. **[30-35min] Critical Bug Fixes**
+   - Document and prioritize issues
+   - Work with Core App Builder on fixes
+   - Verify photo capture/download works
+   - Test edge cases (no face detected, etc.)
+
+**Dependencies**: Filter Engineer (filters working)
+**Blocks**: None
+
+---
+
+### 📚 **Documentation Writer** (Support)
+**Priority**: LOW | **Duration**: 10 minutes | **Phase**: 3-4
+
+#### Tasks:
+1. **[25-30min] User Guide**
+   - Create simple README.md
+   - Document browser compatibility
+   - Add troubleshooting section
+   - Include setup instructions
+
+2. **[35-40min] Code Documentation**
+   - Add comments to critical functions
+   - Document filter customization
+   - Create deployment guide
+
+**Dependencies**: Working MVP (Phase 3)
+**Blocks**: None
+
+---
+
+## 📋 Critical Path & Dependencies
+
+### Sequential Dependencies (Critical Path):
 ```
-PARALLEL WORK:
-├── Core App Builder: Project setup + Camera access
-├── Stylist: Can start basic styling after CAB-003
-└── Documentation Writer: Can draft README structure
+Core App Builder (Foundation) → Filter Engineer → QA Testing
+     ↓
+  Stylist (Base CSS)
 ```
 
-### **Minutes 10-25: Core Development Phase**
-```
-PARALLEL WORK:
-├── Filter Engineer: Face detection + Filter implementation
-├── Core App Builder: Photo capture functionality  
-├── Stylist: UI theming and responsiveness
-└── QA: Early camera testing
-
-BLOCKERS:
-- FE-001 needs CAB-002 (camera) completed
-- QA-001 needs CAB-002 completed
-```
-
-### **Minutes 25-35: Integration & Polish Phase**
-```
-PARALLEL WORK:
-├── QA: Integration testing of all features
-├── Performance Optimizer: Asset and code optimization
-├── Documentation Writer: User guide creation
-└── Stylist: Final UI polish
-
-BLOCKERS:
-- QA-002 needs FE-004 (all filters) completed
-- PO tasks need core features completed
-```
-
-### **Minutes 35-40: Final Testing & Deployment**
-```
-SEQUENTIAL WORK:
-1. QA: Final bug fixes and browser testing
-2. Documentation Writer: Deployment guide
-3. ALL: Quick deployment to GitHub Pages
-```
+### Parallel Work Opportunities:
+- **Minutes 0-10**: Core App Builder + Stylist (base CSS)
+- **Minutes 25-35**: All enhancement agents work in parallel
+- **Minutes 35-40**: Final polish and documentation
 
 ---
 
-## 🚨 Critical Path & Risks
+## 🚨 Risk Mitigation
 
-### **Critical Path**
-1. CAB-002 (Camera) → FE-001 (Face Detection) → FE-002/003/004 (Filters) → QA-002 (Testing)
+### High-Risk Items:
+1. **Camera permissions on mobile** - Core App Builder priority
+2. **Face detection accuracy** - Filter Engineer fallback plan
+3. **iOS Safari compatibility** - QA testing focus
 
-### **Risk Mitigation**
-- **Face detection fails**: Have manual filter positioning fallback
-- **Camera permissions denied**: Clear user instructions and error handling  
-- **Performance issues**: Reduce filter complexity, optimize assets
-- **Browser compatibility**: Focus on Chrome/Safari first
-
-### **Success Metrics**
-- [ ] Camera loads on desktop and mobile
-- [ ] At least 2 filters working with face detection
-- [ ] Photo capture and download functional
-- [ ] Basic mobile responsiveness
-- [ ] Quick user documentation available
+### Fallback Plans:
+- If face detection fails: Manual filter positioning
+- If camera fails: Upload photo feature
+- If filters lag: Reduce to 1 simple filter
 
 ---
 
-## 📞 Communication Protocol
+## ✅ Definition of Done
 
-### **Status Updates** (Every 10 minutes)
-- Quick standup in main chat
-- Blocker escalation to PM
-- Progress percentage per task
+### MVP Success Criteria:
+- [ ] Camera preview works on mobile devices
+- [ ] 2+ filters render in real-time
+- [ ] Photo capture with filters downloads successfully
+- [ ] Works on iOS Safari and Android Chrome
+- [ ] Mobile-responsive interface
+- [ ] Basic error handling for camera permissions
 
-### **Handoff Points**
-1. **Min 10**: CAB hands camera setup to FE for face detection
-2. **Min 20**: FE hands working filters to QA for testing
-3. **Min 30**: All hands final testing and documentation
-
-### **Emergency Protocols**
-- **Behind schedule**: Cut to 1 filter minimum
-- **Technical blocker**: Switch to simpler implementation
-- **Testing issues**: Focus on one browser (Chrome) first
+### Sprint Deliverables:
+- [ ] Working web application (index.html + assets)
+- [ ] Basic user documentation
+- [ ] Tested on 2+ mobile browsers
+- [ ] Ready for demo/user testing
 
 ---
 
-*Last updated: Sprint start | Next update: 10-minute mark*
+## 🏁 Sprint Success Metrics
+- **Technical**: Working photo booth with face filters
+- **User Experience**: Intuitive mobile interface
+- **Performance**: <3 second load time, smooth filter switching
+- **Quality**: No critical bugs, handles edge cases gracefully
+
+*Focus: Ship a working MVP that delights users rather than a complex system with bugs!*
