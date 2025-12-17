@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Face Tracking Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        
+        .debug-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        
+        .camera-section {
+            position: relative;
+        }
+        
+        #videoElement {
+            width: 100%;
+            max-width: 600px;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+        }
+        
+        #overlayCanvas {
+            border: 2px solid #ff4444;
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .debug-panel {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .debug-section {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #3a3a3a;
+            border-radius: 5px;
+        }
+        
+        .debug-title {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-active {
+            background: #4CAF50;
+        }
+        
+        .status-inactive {
+            background: #ff4444;
+        }
+        
+        .status-warning {
+            background: #ffa500;
+        }
+        
+        .filter-controls {
+            grid-column: span 2;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .filter-btn {
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(145deg, #4CAF50, #45a049);
+            transform: scale(1.05);
+        }
+        
+        .console-log {
+            background: #000;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .log-info { background: #1e3a8a22; }
+        .log-warn { background: #fbbf2422; }
+        .log-error { background: #dc262622; }
+        .log-success { background: #16a34a22; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Real-Time Face Tracking Debug Interface</h1>
+    
+    <div class="debug-container">
+        <div class="camera-section">
+            <video id="videoElement" autoplay muted playsinline></video>
+            <canvas id="overlayCanvas"></canvas>
+        </div>
+        
+        <div class="debug-panel">
+            <div class="debug-section">
+                <div class="debug-title">📊 Face Detection Status</div>
+                <div id="faceDetectionStatus">
+                    <span class="status-indicator status-inactive"></span>
+                    <span>Initializing...</span>
+                </div>
+                <div>Detected Faces: <span id="detectedFaceCount">0</span></div>
+                <div>Detection Rate: <span id="detectionRate">0</span> fps</div>
+                <div>Failures: <span id="detectionFailures">0</span></div>
+            </div>
+            
+            <div class="debug-section">
+                <div class="debug-title">🎨 Render Loop Status</div>
+                <div id="renderStatus">
+                    <span class="status-indicator status-inactive"></span>
+                    <span>Inactive</span>
+                </div>
+                <div>Render Rate: <span id="renderRate">0</span> fps</div>
+                <div>Active Filter: <span id="activeFilter">none</span></div>
+            </div>
+            
+            <div class="debug-section">
+                <div class="debug-title">📐 Canvas Alignment</div>
+                <div>Video Size: <span id="videoSize">0x0</span></div>
+                <div>Canvas Size: <span id="canvasSize">0x0</span></div>
+                <div>Alignment: <span id="alignmentStatus">Checking...</span></div>
+            </div>
+            
+            <div class="debug-section">
+                <div class="debug-title">🎯 Filter Position</div>
+                <div>Position Mode: <span id="positionMode">fallback</span></div>
+                <div>X: <span id="filterX">0</span>, Y: <span id="filterY">0</span></div>
+                <div>Size: <span id="filterSize">0</span></div>
+                <div>Confidence: <span id="confidence">N/A</span></div>
+            </div>
+            
+            <div class="debug-section">
+                <div class="debug-title">📝 Console Log</div>
+                <div id="consoleLog" class="console-log"></div>
+            </div>
+        </div>
+        
+        <div class="filter-controls">
+            <button class="filter-btn active" data-filter="none">No Filter</button>
+            <button class="filter-btn" data-filter="snowflake-crown">❄️ Snow Crown</button>
+            <button class="filter-btn" data-filter="reindeer-antlers">🦌 Reindeer</button>
+            <button class="filter-btn" data-filter="santa-hat">🎅 Santa Hat</button>
+        </div>
+    </div>
+
+    <!-- Face API -->
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/dist/face-api.min.js"></script>
+    
+    <!-- Core modules -->
+    <script src="../camera-utils.js"></script>
+    <script src="../performance-utils.js"></script>
+    <script src="../filters.js"></script>
+    <script src="../app.js"></script>
+
+    <script>
+        // Debug interface controller
+        class DebugInterface {
+            constructor() {
+                this.app = null;
+                this.logEntries = [];
+                this.detectionCount = 0;
+                this.renderCount = 0;
+                this.lastDetectionTime = 0;
+                this.lastRenderTime = 0;
+                
+                // Capture console logs
+                this.interceptConsole();
+                
+                // Start debug updates
+                this.startDebugLoop();
+                
+                // Setup filter controls
+                this.setupFilterControls();
+            }
+            
+            interceptConsole() {
+                const originalLog = console.log;
+                const originalWarn = console.warn;
+                const originalError = console.error;
+                
+                console.log = (...args) => {
+                    originalLog.apply(console, args);
+                    this.addLogEntry('info', args.join(' '));
+                };
+                
+                console.warn = (...args) => {
+                    originalWarn.apply(console, args);
+                    this.addLogEntry('warn', args.join(' '));
+                };
+                
+                console.error = (...args) => {
+                    originalError.apply(console, args);
+                    this.addLogEntry('error', args.join(' '));
+                };
+            }
+            
+            addLogEntry(type, message) {
+                const entry = {
+                    type,
+                    message,
+                    timestamp: new Date().toLocaleTimeString()
+                };
+                
+                this.logEntries.unshift(entry);
+                if (this.logEntries.length > 50) {
+                    this.logEntries.pop();
+                }
+                
+                this.updateConsoleDisplay();
+            }
+            
+            updateConsoleDisplay() {
+                const logContainer = document.getElementById('consoleLog');
+                logContainer.innerHTML = this.logEntries.map(entry => {
+                    return `<div class="log-entry log-${entry.type}">
+                        [${entry.timestamp}] ${entry.message}
+                    </div>`;
+                }).join('');
+                logContainer.scrollTop = 0;
+            }
+            
+            setupFilterControls() {
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        
+                        if (this.app) {
+                            this.app.selectFilter(btn);
+                        }
+                    });
+                });
+            }
+            
+            startDebugLoop() {
+                setInterval(() => {
+                    this.updateDebugInfo();
+                }, 1000); // Update every second
+            }
+            
+            updateDebugInfo() {
+                if (!this.app) return;
+                
+                // Face Detection Status
+                const faceDetection = this.app.filterSystem;
+                if (faceDetection) {
+                    const isActive = faceDetection.faceDetectionActive;
+                    const faceCount = faceDetection.lastDetectedFaces.length;
+                    const failures = faceDetection.detectionFailureCount;
+                    
+                    document.getElementById('faceDetectionStatus').innerHTML = `
+                        <span class="status-indicator ${isActive ? 'status-active' : 'status-inactive'}"></span>
+                        <span>${isActive ? 'Active' : 'Inactive'}</span>
+                    `;
+                    document.getElementById('detectedFaceCount').textContent = faceCount;
+                    document.getElementById('detectionFailures').textContent = failures;
+                    
+                    // Calculate detection rate
+                    const now = performance.now();
+                    if (this.lastDetectionTime > 0 && faceCount > 0) {
+                        const rate = 1000 / (now - this.lastDetectionTime);
+                        document.getElementById('detectionRate').textContent = rate.toFixed(1);
+                    }
+                    this.lastDetectionTime = now;
+                }
+                
+                // Render Status
+                const renderActive = this.app.overlayRenderingActive;
+                document.getElementById('renderStatus').innerHTML = `
+                    <span class="status-indicator ${renderActive ? 'status-active' : 'status-inactive'}"></span>
+                    <span>${renderActive ? 'Active' : 'Inactive'}</span>
+                `;
+                document.getElementById('activeFilter').textContent = this.app.currentFilter || 'none';
+                
+                // Canvas Alignment
+                if (this.app.videoSize && this.app.canvasDisplaySize) {
+                    document.getElementById('videoSize').textContent = 
+                        `${this.app.videoSize.width}x${this.app.videoSize.height}`;
+                    document.getElementById('canvasSize').textContent = 
+                        `${this.app.canvasDisplaySize.width}x${this.app.canvasDisplaySize.height}`;
+                    document.getElementById('alignmentStatus').textContent = 'Aligned';
+                }
+                
+                // Filter Position
+                if (this.app.filterSystem && this.app.currentFilter !== 'none') {
+                    const positions = this.app.filterSystem.getFilterPositions(this.app.currentFilter);
+                    if (positions.length > 0) {
+                        const pos = positions[0];
+                        document.getElementById('positionMode').textContent = 
+                            pos.confidence ? 'face-tracked' : 'fallback';
+                        document.getElementById('filterX').textContent = Math.round(pos.x);
+                        document.getElementById('filterY').textContent = Math.round(pos.y);
+                        document.getElementById('filterSize').textContent = Math.round(pos.size || 0);
+                        document.getElementById('confidence').textContent = 
+                            pos.confidence ? `${(pos.confidence * 100).toFixed(1)}%` : 'N/A';
+                    }
+                }
+            }
+            
+            setApp(app) {
+                this.app = app;
+                console.log('🔍 Debug interface connected to app');
+            }
+        }
+        
+        // Initialize debug interface
+        const debug = new DebugInterface();
+        
+        // Wait for app to initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Override the app initialization to connect debug
+            const originalPhotoBoothApp = window.PhotoBoothApp;
+            
+            class DebugPhotoBoothApp extends originalPhotoBoothApp {
+                constructor() {
+                    super();
+                    debug.setApp(this);
+                }
+                
+                selectFilter(filterBtn) {
+                    console.log('🎭 Filter selection detected:', filterBtn.dataset.filter);
+                    super.selectFilter(filterBtn);
+                }
+            }
+            
+            window.PhotoBoothApp = DebugPhotoBoothApp;
+            window.photoBoothApp = new DebugPhotoBoothApp();
+        });
+        
+        console.log('🔍 Real-time face tracking debug interface loaded');
+        console.log('📊 Monitoring face detection, render loop, and filter positioning');
+    </script>
+</body>
+</html>

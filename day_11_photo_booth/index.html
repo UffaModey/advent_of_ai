@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Fun House Photo Booth</title>
+    
+    <!-- Face API.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    
+    <!-- App Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="festive-animations.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header christmas-lights">
+            <h1>🎪 Fun House Photo Booth</h1>
+            <p>Strike a pose with festive filters!</p>
+        </header>
+
+        <!-- Main Camera Interface -->
+        <main class="camera-container">
+            <!-- Camera Preview -->
+            <div class="camera-preview winter-sway">
+                <video id="videoElement" autoplay muted playsinline></video>
+                <canvas id="overlayCanvas"></canvas>
+                <canvas id="captureCanvas" style="display: none;"></canvas>
+                <div class="gesture-hint">👆 Tap to focus</div>
+            </div>
+
+            <!-- Camera Status -->
+            <div id="cameraStatus" class="camera-status">
+                <p>📹 Initializing camera...</p>
+            </div>
+
+            <!-- Error Messages -->
+            <div id="errorMessage" class="error-message" style="display: none;">
+                <p>😔 Oops! Something went wrong.</p>
+                <p class="error-details"></p>
+                <button onclick="location.reload()" class="retry-btn">Try Again</button>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="filter-controls">
+                <h3>🎄 Choose Your Festive Filter ✨</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active snowflake-burst mistletoe-hover" data-filter="none">
+                        <span class="filter-icon">😊</span>
+                        <span class="filter-name">Original</span>
+                    </button>
+                    <button class="filter-btn snowflake-burst present-box" data-filter="snowflake-crown">
+                        <span class="filter-icon">❄️</span>
+                        <span class="filter-name">Snow Crown</span>
+                    </button>
+                    <button class="filter-btn snowflake-burst present-box" data-filter="reindeer-antlers">
+                        <span class="filter-icon">🦌</span>
+                        <span class="filter-name">Reindeer</span>
+                    </button>
+                    <button class="filter-btn snowflake-burst present-box" data-filter="santa-hat">
+                        <span class="filter-icon">🎅</span>
+                        <span class="filter-name">Santa Hat</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Camera Controls -->
+            <div class="camera-controls">
+                <button id="captureBtn" class="capture-btn festive-pulse bell-shake animate-on-click" disabled>
+                    <span class="btn-icon">📸</span>
+                    <span class="btn-text">Take Photo</span>
+                </button>
+                
+                <button id="switchCameraBtn" class="switch-camera-btn star-trail">
+                    <span class="btn-icon">🔄</span>
+                    <span class="btn-text">Flip Camera</span>
+                </button>
+            </div>
+
+            <!-- Photo Preview -->
+            <div id="photoPreview" class="photo-preview snow-globe" style="display: none;">
+                <div class="preview-container">
+                    <img id="capturedPhoto" src="" alt="Captured photo">
+                    <div class="preview-controls">
+                        <button id="savePhotoBtn" class="save-btn fireplace-glow present-box">
+                            <span class="btn-icon">💾</span>
+                            Save Photo
+                        </button>
+                        <button id="retakeBtn" class="retake-btn star-trail">
+                            <span class="btn-icon">🔄</span>
+                            Retake
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="loading-content">
+                <div class="loading-spinner candy-cane-progress"></div>
+                <p class="winter-sway">Getting ready...</p>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <footer class="app-footer holly-border">
+            <div class="instructions">
+                <h4>📱 How to use:</h4>
+                <ul>
+                    <li class="icicle-drip">Allow camera access when prompted</li>
+                    <li>Choose your favorite festive filter</li>
+                    <li>Position your face in the frame</li>
+                    <li>Tap the camera button to capture</li>
+                    <li>Save your magical photo!</li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Camera Utilities -->
+    <script src="camera-utils.js"></script>
+    
+    <!-- Performance Utilities -->
+    <script src="performance-utils.js"></script>
+    
+    <!-- Filter System -->
+    <script src="filters.js"></script>
+    
+    <!-- App JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>

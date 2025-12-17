@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f0f0f0;
+        }
+        .debug-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .camera-preview {
+            position: relative;
+            width: 400px;
+            height: 300px;
+            margin: 20px auto;
+            border: 2px solid #333;
+            background: #000;
+        }
+        #videoElement {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #overlayCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 10;
+            border: 2px solid red !important;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #ccc;
+            background: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .filter-btn.active {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+        .debug-info {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .start-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 15px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>🔧 Filter Debug Test</h1>
+        
+        <button id="startBtn" class="start-btn">Start Camera & Debug</button>
+        
+        <div class="camera-preview">
+            <video id="videoElement" autoplay muted playsinline></video>
+            <canvas id="overlayCanvas"></canvas>
+        </div>
+        
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="none">No Filter</button>
+            <button class="filter-btn" data-filter="snowflake-crown">❄️ Snow Crown</button>
+            <button class="filter-btn" data-filter="reindeer-antlers">🦌 Reindeer</button>
+            <button class="filter-btn" data-filter="santa-hat">🎅 Santa Hat</button>
+        </div>
+        
+        <div class="debug-info" id="debugInfo">
+            Debug information will appear here...
+        </div>
+        
+        <div class="debug-info" id="renderInfo">
+            Render information will appear here...
+        </div>
+    </div>
+
+    <script>
+        class DebugPhotoBoothApp {
+            constructor() {
+                this.video = document.getElementById('videoElement');
+                this.overlayCanvas = document.getElementById('overlayCanvas');
+                this.startBtn = document.getElementById('startBtn');
+                this.debugInfo = document.getElementById('debugInfo');
+                this.renderInfo = document.getElementById('renderInfo');
+                
+                this.overlayCtx = this.overlayCanvas.getContext('2d');
+                this.currentFilter = 'none';
+                this.stream = null;
+                this.overlayRenderingActive = false;
+                this.renderCount = 0;
+                
+                this.setupEventListeners();
+            }
+            
+            setupEventListeners() {
+                this.startBtn.addEventListener('click', () => this.start());
+                
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.selectFilter(btn.dataset.filter);
+                    });
+                });
+                
+                // Debug canvas positioning on resize
+                window.addEventListener('resize', () => {
+                    this.updateCanvasPosition();
+                });
+            }
+            
+            async start() {
+                try {
+                    this.updateDebugInfo('Starting camera...');
+                    
+                    // Get camera stream
+                    this.stream = await navigator.mediaDevices.getUserMedia({
+                        video: { 
+                            facingMode: 'user',
+                            width: { ideal: 640 },
+                            height: { ideal: 480 }
+                        }
+                    });
+                    
+                    this.video.srcObject = this.stream;
+                    
+                    // Wait for video to load
+                    await new Promise((resolve) => {
+                        this.video.onloadedmetadata = () => {
+                            this.video.play();
+                            resolve();
+                        };
+                    });
+                    
+                    this.setupCanvas();
+                    this.updateDebugInfo('Camera started successfully! Canvas setup complete.');
+                    this.startBtn.textContent = '✅ Camera Running';
+                    this.startBtn.disabled = true;
+                    
+                } catch (error) {
+                    this.updateDebugInfo(`ERROR: ${error.message}`);
+                }
+            }
+            
+            setupCanvas() {
+                // Get video dimensions
+                const videoRect = this.video.getBoundingClientRect();
+                console.log('📺 Video rect:', videoRect);
+                
+                // Set canvas dimensions to match video display size
+                this.overlayCanvas.width = videoRect.width;
+                this.overlayCanvas.height = videoRect.height;
+                this.overlayCanvas.style.width = videoRect.width + 'px';
+                this.overlayCanvas.style.height = videoRect.height + 'px';
+                
+                // Position canvas over video
+                this.updateCanvasPosition();
+                
+                // Store dimensions
+                this.canvasDisplaySize = { 
+                    width: videoRect.width, 
+                    height: videoRect.height 
+                };
+                
+                this.updateDebugInfo(`Canvas setup: ${this.overlayCanvas.width}x${this.overlayCanvas.height}`);\n                
+                // Test canvas is working
+                this.testCanvas();
+            }
+            
+            updateCanvasPosition() {
+                const videoRect = this.video.getBoundingClientRect();
+                this.overlayCanvas.style.position = 'absolute';
+                this.overlayCanvas.style.top = '0px';
+                this.overlayCanvas.style.left = '0px';
+            }
+            
+            testCanvas() {
+                console.log('🧪 Testing canvas...');
+                this.overlayCtx.clearRect(0, 0, this.overlayCanvas.width, this.overlayCanvas.height);
+                
+                // Draw test rectangle
+                this.overlayCtx.fillStyle = 'rgba(0, 255, 0, 0.7)';
+                this.overlayCtx.fillRect(10, 10, 100, 50);
+                this.overlayCtx.fillStyle = 'white';
+                this.overlayCtx.font = '16px Arial';
+                this.overlayCtx.fillText('CANVAS OK', 15, 35);
+                
+                setTimeout(() => {
+                    this.overlayCtx.clearRect(0, 0, this.overlayCanvas.width, this.overlayCanvas.height);
+                }, 2000);
+            }
+            
+            selectFilter(filterId) {
+                console.log(`🎭 Filter selected: ${filterId}`);
+                this.currentFilter = filterId;
+                this.updateDebugInfo(`Filter selected: ${filterId}`);
+                
+                if (filterId === 'none') {
+                    this.stopOverlayRendering();
+                    this.overlayCtx.clearRect(0, 0, this.overlayCanvas.width, this.overlayCanvas.height);
+                } else {
+                    this.startOverlayRendering();
+                }
+            }
+            
+            startOverlayRendering() {
+                if (this.overlayRenderingActive) {
+                    console.log('🔄 Overlay rendering already active');
+                    return;
+                }
+                
+                console.log('🚀 Starting overlay rendering');
+                this.overlayRenderingActive = true;
+                this.renderCount = 0;
+                
+                const renderLoop = () => {
+                    if (!this.overlayRenderingActive || this.currentFilter === 'none') {
+                        return;
+                    }
+                    
+                    this.renderCount++;
+                    
+                    // Clear canvas
+                    this.overlayCtx.clearRect(0, 0, this.overlayCanvas.width, this.overlayCanvas.height);
+                    
+                    // Apply filter
+                    this.applyFilter();
+                    
+                    // Update render info every 30 frames
+                    if (this.renderCount % 30 === 0) {
+                        this.updateRenderInfo(`Render count: ${this.renderCount}, Filter: ${this.currentFilter}`);\n                    }
+                    
+                    requestAnimationFrame(renderLoop);
+                };
+                
+                requestAnimationFrame(renderLoop);
+            }
+            
+            stopOverlayRendering() {
+                console.log('⏹️ Stopping overlay rendering');
+                this.overlayRenderingActive = false;
+            }
+            
+            applyFilter() {
+                if (!this.canvasDisplaySize) return;
+                
+                const width = this.canvasDisplaySize.width;
+                const height = this.canvasDisplaySize.height;
+                
+                console.log(`🎨 Applying filter ${this.currentFilter} to ${width}x${height} canvas`);
+                
+                switch (this.currentFilter) {
+                    case 'snowflake-crown':
+                        this.drawFilter('❄️👑❄️', width / 2, height * 0.2, 48);
+                        break;
+                    case 'reindeer-antlers':
+                        this.drawFilter('🦌', width / 2, height * 0.15, 52);
+                        break;
+                    case 'santa-hat':
+                        this.drawFilter('🎅', width / 2, height * 0.18, 50);
+                        break;
+                }
+            }
+            
+            drawFilter(emoji, x, y, fontSize) {
+                console.log(`✏️ Drawing ${emoji} at (${x}, ${y}) size ${fontSize}`);
+                
+                this.overlayCtx.save();
+                
+                // Calculate responsive size
+                const scaledSize = Math.max(fontSize * (this.canvasDisplaySize.width / 400), 24);
+                
+                this.overlayCtx.font = `${scaledSize}px "Apple Color Emoji", "Segoe UI Emoji", Arial`;
+                this.overlayCtx.textAlign = 'center';
+                this.overlayCtx.textBaseline = 'middle';
+                
+                // Add shadow
+                this.overlayCtx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+                this.overlayCtx.shadowBlur = 6;
+                this.overlayCtx.shadowOffsetX = 2;
+                this.overlayCtx.shadowOffsetY = 2;
+                
+                // Draw emoji
+                this.overlayCtx.fillText(emoji, x, y);
+                
+                // Add outline
+                this.overlayCtx.shadowColor = 'transparent';
+                this.overlayCtx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                this.overlayCtx.lineWidth = 2;
+                this.overlayCtx.strokeText(emoji, x, y);
+                
+                this.overlayCtx.restore();
+                
+                console.log(`✅ Filter drawn at (${x}, ${y})`);
+            }
+            
+            updateDebugInfo(message) {
+                const timestamp = new Date().toLocaleTimeString();
+                this.debugInfo.innerHTML = `[${timestamp}] ${message}<br>` + this.debugInfo.innerHTML;
+                console.log(`🔧 DEBUG: ${message}`);
+            }
+            
+            updateRenderInfo(message) {
+                this.renderInfo.textContent = message;
+            }
+        }
+        
+        // Start the debug app
+        const debugApp = new DebugPhotoBoothApp();
+    </script>
+</body>
+</html>

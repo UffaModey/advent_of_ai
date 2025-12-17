@@ -1,0 +1,335 @@
+/**
+ * Additional Festive Animations and Effects
+ * Christmas/Winter themed micro-interactions
+ */
+
+/* Holly Border Animation for Active Elements */
+.holly-border {
+    position: relative;
+    overflow: hidden;
+}
+
+.holly-border::before {
+    content: '🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 20px;
+    font-size: 12px;
+    line-height: 20px;
+    animation: holly-slide 8s linear infinite;
+    z-index: 1;
+}
+
+@keyframes holly-slide {
+    0% { left: -100%; }
+    100% { left: 0%; }
+}
+
+/* Snowflake Burst Effect for Button Clicks */
+.snowflake-burst {
+    position: relative;
+    overflow: hidden;
+}
+
+.snowflake-burst::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: 
+        radial-gradient(circle, #fff 1px, transparent 1px),
+        radial-gradient(circle, #b3e5fc 1px, transparent 1px),
+        radial-gradient(circle, #fff 1px, transparent 1px);
+    background-size: 10px 10px, 15px 15px, 8px 8px;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: all 0.6s ease-out;
+}
+
+.snowflake-burst:active::after {
+    width: 200px;
+    height: 200px;
+    opacity: 1;
+    transition: all 0.1s ease-out;
+}
+
+/* Christmas Lights Effect */
+.christmas-lights {
+    position: relative;
+}
+
+.christmas-lights::before {
+    content: '🔴🟡🟢🔵🟣🔴🟡🟢🔵🟣';
+    position: absolute;
+    top: -15px;
+    left: 0;
+    right: 0;
+    font-size: 8px;
+    text-align: center;
+    opacity: 0.7;
+    animation: twinkle 2s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Candy Cane Loading Bar */
+.candy-cane-progress {
+    background: repeating-linear-gradient(
+        45deg,
+        #ff4444,
+        #ff4444 10px,
+        #ffffff 10px,
+        #ffffff 20px
+    );
+    background-size: 40px 40px;
+    animation: candy-cane-move 1s linear infinite;
+}
+
+@keyframes candy-cane-move {
+    0% { background-position: 0 0; }
+    100% { background-position: 40px 0; }
+}
+
+/* Gingerbread Button Hover Effect */
+.gingerbread-hover {
+    transition: all 0.3s ease;
+}
+
+.gingerbread-hover:hover {
+    background: linear-gradient(145deg, #d4a574, #c19660);
+    box-shadow: 
+        0 0 20px rgba(212, 165, 116, 0.5),
+        inset 2px 2px 4px rgba(0, 0, 0, 0.1);
+    transform: rotate(-1deg) scale(1.02);
+}
+
+/* Winter Wind Effect */
+@keyframes winter-wind {
+    0%, 100% {
+        transform: translateX(0) rotate(0deg);
+    }
+    25% {
+        transform: translateX(2px) rotate(0.5deg);
+    }
+    75% {
+        transform: translateX(-2px) rotate(-0.5deg);
+    }
+}
+
+.winter-sway {
+    animation: winter-wind 4s ease-in-out infinite;
+}
+
+/* Festive Pulse Effect */
+@keyframes festive-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+    }
+}
+
+.festive-pulse {
+    animation: festive-pulse 2s infinite;
+}
+
+/* Snow Globe Effect for Photo Preview */
+.snow-globe {
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.snow-globe::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+        radial-gradient(2px 2px at 40% 70%, #fff, transparent),
+        radial-gradient(1px 1px at 90% 40%, #fff, transparent),
+        radial-gradient(1px 1px at 70% 80%, #fff, transparent);
+    background-size: 50px 50px, 80px 80px, 40px 40px, 60px 60px;
+    animation: snow-globe-fall 3s linear infinite;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0.8;
+}
+
+@keyframes snow-globe-fall {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+/* Sleigh Bell Shake */
+@keyframes bell-shake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(5deg); }
+    75% { transform: rotate(-5deg); }
+}
+
+.bell-shake {
+    animation: bell-shake 0.5s ease-in-out;
+}
+
+/* Mistletoe Hover Effect */
+.mistletoe-hover {
+    position: relative;
+}
+
+.mistletoe-hover:hover::after {
+    content: '🌿';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px;
+    animation: mistletoe-sway 1s ease-in-out infinite;
+}
+
+@keyframes mistletoe-sway {
+    0%, 100% { transform: translateX(-50%) rotate(-5deg); }
+    50% { transform: translateX(-50%) rotate(5deg); }
+}
+
+/* Present Box Opening Effect */
+.present-box {
+    position: relative;
+    overflow: hidden;
+}
+
+.present-box::before {
+    content: '🎁';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 30px;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    opacity: 0;
+}
+
+.present-box:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+/* Icicle Drip Effect */
+.icicle-drip {
+    position: relative;
+}
+
+.icicle-drip::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 0;
+    background: linear-gradient(to bottom, #b3e5fc, transparent);
+    animation: icicle-grow 3s ease-in-out infinite;
+    transform: translateX(-50%);
+}
+
+@keyframes icicle-grow {
+    0%, 100% { height: 0; }
+    50% { height: 20px; }
+}
+
+/* Fireplace Glow Effect */
+.fireplace-glow {
+    box-shadow: 
+        0 0 20px rgba(255, 140, 0, 0.3),
+        0 0 40px rgba(255, 69, 0, 0.2),
+        0 0 60px rgba(255, 0, 0, 0.1);
+    animation: fireplace-flicker 2s ease-in-out infinite alternate;
+}
+
+@keyframes fireplace-flicker {
+    0% {
+        box-shadow: 
+            0 0 20px rgba(255, 140, 0, 0.3),
+            0 0 40px rgba(255, 69, 0, 0.2),
+            0 0 60px rgba(255, 0, 0, 0.1);
+    }
+    100% {
+        box-shadow: 
+            0 0 30px rgba(255, 140, 0, 0.4),
+            0 0 50px rgba(255, 69, 0, 0.3),
+            0 0 70px rgba(255, 0, 0, 0.2);
+    }
+}
+
+/* Star Sparkle Trail */
+.star-trail {
+    position: relative;
+}
+
+.star-trail::before {
+    content: '✨⭐✨⭐✨';
+    position: absolute;
+    top: 50%;
+    left: -100%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    opacity: 0;
+    animation: star-trail-pass 2s ease-in-out infinite;
+}
+
+@keyframes star-trail-pass {
+    0% {
+        left: -100%;
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        left: 100%;
+        opacity: 0;
+    }
+}
+
+/* Utility Classes for Easy Application */
+.animate-on-hover:hover .winter-sway { animation-play-state: running; }
+.animate-on-click:active .bell-shake { animation-play-state: running; }
+.pause-animations { animation-play-state: paused !important; }
+
+/* Accessibility - Respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+    .holly-border::before,
+    .christmas-lights::before,
+    .winter-sway,
+    .festive-pulse,
+    .snow-globe::before,
+    .bell-shake,
+    .mistletoe-hover:hover::after,
+    .icicle-drip::after,
+    .fireplace-glow,
+    .star-trail::before {
+        animation: none !important;
+    }
+    
+    .snowflake-burst::after,
+    .present-box::before {
+        transition: none !important;
+    }
+}

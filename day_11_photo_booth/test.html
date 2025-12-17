@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Fun House Photo Booth</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: white;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .status {
+            background: #16213e;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .camera-preview {
+            position: relative;
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        #overlayCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        button {
+            background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button.active {
+            background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        }
+        .metrics {
+            background: #16213e;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .debug-toggle {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎭 Filter System Test</h1>
+        
+        <div class="status" id="status">
+            📹 Initializing...
+        </div>
+
+        <div class="camera-preview">
+            <video id="videoElement" autoplay muted playsinline></video>
+            <canvas id="overlayCanvas"></canvas>
+        </div>
+
+        <div class="controls">
+            <button onclick="selectFilter('none')" class="active" id="btn-none">
+                😊 Original
+            </button>
+            <button onclick="selectFilter('snowflake-crown')" id="btn-snowflake-crown">
+                ❄️ Snow Crown
+            </button>
+            <button onclick="selectFilter('reindeer-antlers')" id="btn-reindeer-antlers">
+                🦌 Reindeer
+            </button>
+            <button onclick="selectFilter('santa-hat')" id="btn-santa-hat">
+                🎅 Santa Hat
+            </button>
+        </div>
+
+        <div class="debug-toggle">
+            <label>
+                <input type="checkbox" id="debugMode" onchange="toggleDebug()">
+                Debug Mode (show detection info)
+            </label>
+        </div>
+
+        <div class="metrics" id="metrics">
+            Performance metrics will appear here...
+        </div>
+    </div>
+
+    <!-- Face API.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    
+    <!-- Camera Utilities -->
+    <script src="camera-utils.js"></script>
+    
+    <!-- Filter System -->
+    <script src="filters.js"></script>
+
+    <script>
+        // Simple test app to verify filter system
+        class TestApp {
+            constructor() {
+                this.video = document.getElementById('videoElement');
+                this.overlayCanvas = document.getElementById('overlayCanvas');
+                this.overlayCtx = this.overlayCanvas.getContext('2d');
+                
+                this.currentFilter = 'none';
+                this.facingMode = 'user';
+                this.faceDetectionEnabled = false;
+                this.debug = false;
+                
+                this.init();
+            }
+
+            async init() {
+                try {
+                    this.updateStatus('📹 Starting camera...');
+                    
+                    // Initialize camera
+                    this.stream = await CameraUtils.initCameraWithFallback(this.facingMode);
+                    this.video.srcObject = this.stream;
+                    CameraUtils.optimizeVideoForMobile(this.video);
+                    
+                    await new Promise(resolve => {
+                        this.video.onloadedmetadata = resolve;
+                    });
+                    
+                    await this.video.play();
+                    this.setupCanvases();
+                    
+                    // Initialize face detection
+                    await this.initFaceDetection();
+                    
+                    // Initialize filter system
+                    this.filterSystem = new FilterSystem(this);
+                    
+                    // Start metrics update
+                    setInterval(() => this.updateMetrics(), 1000);
+                    
+                    this.updateStatus('✅ Ready! Select a filter to test.');
+                    
+                } catch (error) {
+                    console.error('❌ Initialization failed:', error);
+                    this.updateStatus('❌ Failed: ' + error.message);
+                }
+            }
+
+            async initFaceDetection() {
+                try {
+                    this.updateStatus('🤖 Loading face detection...');
+                    
+                    if (typeof faceapi === 'undefined') {
+                        throw new Error('face-api.js not loaded');
+                    }
+
+                    const modelUrl = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/model';
+                    
+                    await Promise.all([
+                        faceapi.nets.tinyFaceDetector.loadFromUri(modelUrl),
+                        faceapi.nets.faceLandmark68TinyNet.loadFromUri(modelUrl)
+                    ]);
+
+                    this.faceDetectionEnabled = true;
+                    console.log('✅ Face detection ready');
+                    
+                } catch (error) {
+                    console.warn('⚠️ Face detection not available:', error);
+                }
+            }
+
+            setupCanvases() {
+                const updateCanvases = () => {
+                    if (this.video.videoWidth === 0 || this.video.videoHeight === 0) {
+                        setTimeout(updateCanvases, 100);
+                        return;
+                    }
+
+                    const videoWidth = this.video.videoWidth;
+                    const videoHeight = this.video.videoHeight;
+                    
+                    const optimalSize = CameraUtils.getOptimalCanvasSize(
+                        videoWidth, videoHeight, 640, 480
+                    );
+                    
+                    const pixelRatio = CameraUtils.getPixelRatio();
+                    const displayWidth = optimalSize.width;
+                    const displayHeight = optimalSize.height;
+                    const canvasWidth = displayWidth * pixelRatio;
+                    const canvasHeight = displayHeight * pixelRatio;
+                    
+                    this.overlayCanvas.width = canvasWidth;
+                    this.overlayCanvas.height = canvasHeight;
+                    this.overlayCanvas.style.width = displayWidth + 'px';
+                    this.overlayCanvas.style.height = displayHeight + 'px';
+                    this.overlayCtx.scale(pixelRatio, pixelRatio);
+                    
+                    this.overlayCanvas.style.position = 'absolute';
+                    this.overlayCanvas.style.top = '0';
+                    this.overlayCanvas.style.left = '0';
+                    this.overlayCanvas.style.pointerEvents = 'none';
+                    this.overlayCanvas.style.zIndex = '10';
+                    
+                    this.canvasDisplaySize = { width: displayWidth, height: displayHeight };
+                    this.canvasActualSize = { width: canvasWidth, height: canvasHeight };
+                    this.videoSize = { width: videoWidth, height: videoHeight };
+                    
+                    this.startOverlayRendering();
+                };
+                
+                updateCanvases();
+            }
+
+            startOverlayRendering() {
+                if (this.overlayRenderingActive) return;
+                
+                this.overlayRenderingActive = true;
+                
+                const renderLoop = () => {
+                    if (!this.overlayRenderingActive) return;
+                    
+                    this.overlayCtx.clearRect(0, 0, this.canvasDisplaySize.width, this.canvasDisplaySize.height);
+                    
+                    if (this.currentFilter !== 'none') {
+                        this.applyFilterToOverlay(this.overlayCtx);
+                    }
+                    
+                    setTimeout(() => requestAnimationFrame(renderLoop), 66); // ~15fps
+                };
+                
+                requestAnimationFrame(renderLoop);
+            }
+
+            applyFilterToOverlay(ctx) {
+                if (this.filterSystem) {
+                    this.filterSystem.applyFilterToOverlay(ctx, this.currentFilter);
+                }
+            }
+
+            getVideoToCanvasCoordinates(videoX, videoY) {
+                if (!this.videoSize || !this.canvasDisplaySize) {
+                    return { x: videoX, y: videoY };
+                }
+                
+                const scaleX = this.canvasDisplaySize.width / this.videoSize.width;
+                const scaleY = this.canvasDisplaySize.height / this.videoSize.height;
+                
+                return {
+                    x: videoX * scaleX,
+                    y: videoY * scaleY
+                };
+            }
+
+            updateStatus(message) {
+                document.getElementById('status').textContent = message;
+            }
+
+            updateMetrics() {
+                if (!this.filterSystem) return;
+                
+                const metrics = this.filterSystem.getPerformanceMetrics();
+                const metricsEl = document.getElementById('metrics');
+                
+                metricsEl.innerHTML = `
+                    <strong>Filter System Metrics:</strong><br>
+                    Face Detection Active: ${metrics.faceDetectionActive ? '✅' : '❌'}<br>
+                    Detected Faces: ${metrics.detectedFaces}<br>
+                    Detection Failures: ${metrics.detectionFailures}<br>
+                    Using Fallback: ${metrics.usingFallback ? '✅' : '❌'}<br>
+                    Current Filter: ${this.currentFilter}<br>
+                    Debug Mode: ${this.debug ? '✅' : '❌'}<br>
+                    Canvas Size: ${this.canvasDisplaySize?.width || 0} x ${this.canvasDisplaySize?.height || 0}<br>
+                    Video Size: ${this.videoSize?.width || 0} x ${this.videoSize?.height || 0}
+                `;
+            }
+        }
+
+        let testApp;
+
+        function selectFilter(filterId) {
+            if (!testApp) return;
+            
+            // Update button states
+            document.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + filterId).classList.add('active');
+            
+            testApp.currentFilter = filterId;
+            console.log('🎭 Filter selected:', filterId);
+        }
+
+        function toggleDebug() {
+            const debugMode = document.getElementById('debugMode').checked;
+            if (testApp) {
+                testApp.debug = debugMode;
+            }
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            testApp = new TestApp();
+        });
+    </script>
+</body>
+</html>

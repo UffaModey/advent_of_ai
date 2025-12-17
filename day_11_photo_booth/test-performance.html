@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Performance Test - Fun House Photo Booth</title>
+    
+    <!-- App Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        .performance-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 350px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 1000;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .performance-panel h3 {
+            margin-top: 0;
+            color: #4caf50;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            padding: 3px 0;
+        }
+        
+        .metric.good { color: #4caf50; }
+        .metric.warning { color: #ff9800; }
+        .metric.error { color: #f44336; }
+        
+        .controls {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #333;
+        }
+        
+        .controls button {
+            margin: 2px;
+            padding: 5px 10px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        
+        .controls button:hover {
+            background: #555;
+        }
+        
+        .controls button.active {
+            background: #4caf50;
+        }
+        
+        .suggestions {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255, 193, 7, 0.1);
+            border-radius: 5px;
+        }
+        
+        .suggestions h4 {
+            margin-top: 0;
+            color: #ffc107;
+        }
+        
+        .suggestions ul {
+            margin: 5px 0;
+            padding-left: 15px;
+        }
+        
+        .suggestions li {
+            margin: 2px 0;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Performance Panel -->
+        <div class="performance-panel" id="performancePanel">
+            <h3>📊 Performance Monitor</h3>
+            
+            <div class="metrics" id="metricsDisplay">
+                <div class="metric">
+                    <span>Status:</span>
+                    <span id="status">Initializing...</span>
+                </div>
+                <div class="metric">
+                    <span>Startup Time:</span>
+                    <span id="startupTime">-</span>
+                </div>
+                <div class="metric">
+                    <span>Frame Rate:</span>
+                    <span id="frameRate">-</span>
+                </div>
+                <div class="metric">
+                    <span>Render Time:</span>
+                    <span id="renderTime">-</span>
+                </div>
+                <div class="metric">
+                    <span>Face Detection:</span>
+                    <span id="faceDetectionTime">-</span>
+                </div>
+                <div class="metric">
+                    <span>Memory:</span>
+                    <span id="memoryUsage">-</span>
+                </div>
+                <div class="metric">
+                    <span>Device Class:</span>
+                    <span id="deviceClass">-</span>
+                </div>
+                <div class="metric">
+                    <span>Overall Rating:</span>
+                    <span id="overallRating">-</span>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="toggleAdaptive">Toggle Adaptive</button>
+                <button id="toggleFrameSkip">Toggle Frame Skip</button>
+                <button id="toggleFaceDetection">Toggle Face Detection</button>
+                <button id="toggle15fps">15 FPS</button>
+                <button id="toggle30fps">30 FPS</button>
+                <button id="generateReport">Full Report</button>
+            </div>
+            
+            <div class="suggestions" id="suggestions" style="display: none;">
+                <h4>💡 Optimization Suggestions</h4>
+                <ul id="suggestionsList"></ul>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="app-header">
+            <h1>🎪 Performance Test - Photo Booth</h1>
+            <p>Monitor and optimize app performance in real-time!</p>
+        </header>
+
+        <!-- Main Camera Interface -->
+        <main class="camera-container">
+            <!-- Camera Preview -->
+            <div class="camera-preview">
+                <video id="videoElement" autoplay muted playsinline></video>
+                <canvas id="overlayCanvas"></canvas>
+                <canvas id="captureCanvas" style="display: none;"></canvas>
+            </div>
+
+            <!-- Camera Status -->
+            <div id="cameraStatus" class="camera-status">
+                <p>📹 Initializing camera...</p>
+            </div>
+
+            <!-- Error Messages -->
+            <div id="errorMessage" class="error-message" style="display: none;">
+                <p>😔 Oops! Something went wrong.</p>
+                <p class="error-details"></p>
+                <button onclick="location.reload()" class="retry-btn">Try Again</button>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="filter-controls">
+                <h3>Choose Your Filter</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="none">
+                        <span class="filter-icon">😊</span>
+                        <span class="filter-name">Original</span>
+                    </button>
+                    <button class="filter-btn" data-filter="snowflake-crown">
+                        <span class="filter-icon">❄️</span>
+                        <span class="filter-name">Snow Crown</span>
+                    </button>
+                    <button class="filter-btn" data-filter="reindeer-antlers">
+                        <span class="filter-icon">🦌</span>
+                        <span class="filter-name">Reindeer</span>
+                    </button>
+                    <button class="filter-btn" data-filter="santa-hat">
+                        <span class="filter-icon">🎅</span>
+                        <span class="filter-name">Santa Hat</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Camera Controls -->
+            <div class="camera-controls">
+                <button id="captureBtn" class="capture-btn" disabled>
+                    <span class="btn-icon">📸</span>
+                    <span class="btn-text">Take Photo</span>
+                </button>
+                
+                <button id="switchCameraBtn" class="switch-camera-btn">
+                    <span class="btn-icon">🔄</span>
+                    <span class="btn-text">Flip Camera</span>
+                </button>
+            </div>
+
+            <!-- Photo Preview -->
+            <div id="photoPreview" class="photo-preview" style="display: none;">
+                <div class="preview-container">
+                    <img id="capturedPhoto" src="" alt="Captured photo">
+                    <div class="preview-controls">
+                        <button id="savePhotoBtn" class="save-btn">
+                            <span class="btn-icon">💾</span>
+                            Save Photo
+                        </button>
+                        <button id="retakeBtn" class="retake-btn">
+                            <span class="btn-icon">🔄</span>
+                            Retake
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <p>Getting ready...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Face API.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+    <!-- Camera Utilities -->
+    <script src="camera-utils.js"></script>
+    
+    <!-- Performance Utilities -->
+    <script src="performance-utils.js"></script>
+    
+    <!-- Filter System -->
+    <script src="filters.js"></script>
+    
+    <!-- App JavaScript -->
+    <script src="app.js"></script>
+
+    <!-- Performance Test Script -->
+    <script>
+        class PerformanceTestInterface {
+            constructor() {
+                this.app = null;
+                this.updateInterval = null;
+                this.isMonitoring = false;
+                
+                this.init();
+            }
+
+            init() {
+                // Wait for app to initialize
+                document.addEventListener('DOMContentLoaded', () => {
+                    setTimeout(() => {
+                        this.app = window.photoBoothApp;
+                        this.setupInterface();
+                        this.startMonitoring();
+                    }, 1000);
+                });
+            }
+
+            setupInterface() {
+                // Toggle Adaptive Rendering
+                document.getElementById('toggleAdaptive').addEventListener('click', () => {
+                    if (this.app) {
+                        this.app.toggleAdaptiveRendering(!this.app.enableAdaptiveRendering);
+                        this.updateButtonStates();
+                    }
+                });
+
+                // Toggle Frame Skip
+                document.getElementById('toggleFrameSkip').addEventListener('click', () => {
+                    if (this.app) {
+                        this.app.toggleSmartFrameSkip(!this.app.enableSmartFrameSkip);
+                        this.updateButtonStates();
+                    }
+                });
+
+                // Toggle Face Detection
+                document.getElementById('toggleFaceDetection').addEventListener('click', () => {
+                    if (this.app && this.app.filterSystem) {
+                        if (this.app.filterSystem.faceDetectionActive) {
+                            this.app.filterSystem.stopFaceDetection();
+                        } else {
+                            this.app.filterSystem.startFaceDetection();
+                        }
+                        this.updateButtonStates();
+                    }
+                });
+
+                // Set FPS targets
+                document.getElementById('toggle15fps').addEventListener('click', () => {
+                    if (this.app) {
+                        this.app.setTargetFrameRate(15);
+                        this.updateButtonStates();
+                    }
+                });
+
+                document.getElementById('toggle30fps').addEventListener('click', () => {
+                    if (this.app) {
+                        this.app.setTargetFrameRate(30);
+                        this.updateButtonStates();
+                    }
+                });
+
+                // Generate full report
+                document.getElementById('generateReport').addEventListener('click', () => {
+                    this.generateFullReport();
+                });
+
+                this.updateButtonStates();
+            }
+
+            updateButtonStates() {
+                if (!this.app) return;
+
+                const adaptiveBtn = document.getElementById('toggleAdaptive');
+                adaptiveBtn.classList.toggle('active', this.app.enableAdaptiveRendering);
+                adaptiveBtn.textContent = this.app.enableAdaptiveRendering ? 'Adaptive: ON' : 'Adaptive: OFF';
+
+                const frameSkipBtn = document.getElementById('toggleFrameSkip');
+                frameSkipBtn.classList.toggle('active', this.app.enableSmartFrameSkip);
+                frameSkipBtn.textContent = this.app.enableSmartFrameSkip ? 'Frame Skip: ON' : 'Frame Skip: OFF';
+
+                const faceDetectionBtn = document.getElementById('toggleFaceDetection');
+                const faceDetectionActive = this.app.filterSystem ? this.app.filterSystem.faceDetectionActive : false;
+                faceDetectionBtn.classList.toggle('active', faceDetectionActive);
+                faceDetectionBtn.textContent = faceDetectionActive ? 'Face Detection: ON' : 'Face Detection: OFF';
+
+                const fps15Btn = document.getElementById('toggle15fps');
+                fps15Btn.classList.toggle('active', this.app.targetFrameRate === 15);
+
+                const fps30Btn = document.getElementById('toggle30fps');
+                fps30Btn.classList.toggle('active', this.app.targetFrameRate === 30);
+            }
+
+            startMonitoring() {
+                if (this.isMonitoring) return;
+                
+                this.isMonitoring = true;
+                this.updateInterface();
+                
+                this.updateInterval = setInterval(() => {
+                    this.updateInterface();
+                }, 1000); // Update every second
+            }
+
+            stopMonitoring() {
+                this.isMonitoring = false;
+                if (this.updateInterval) {
+                    clearInterval(this.updateInterval);
+                }
+            }
+
+            updateInterface() {
+                if (!this.app || !this.app.performanceMonitor) {
+                    document.getElementById('status').textContent = 'Not Available';
+                    return;
+                }
+
+                const performanceData = this.app.getPerformanceData();
+                if (!performanceData) return;
+
+                const metrics = performanceData.monitor.runtime;
+                const startup = performanceData.monitor.startup;
+                const device = performanceData.monitor.device;
+
+                // Update status
+                document.getElementById('status').textContent = 'Monitoring';
+
+                // Update startup time
+                const startupEl = document.getElementById('startupTime');
+                if (startup.totalStartupTime) {
+                    const time = startup.totalStartupTime.toFixed(0);
+                    startupEl.textContent = `${time}ms`;
+                    startupEl.parentElement.className = time < 3000 ? 'metric good' : time < 5000 ? 'metric warning' : 'metric error';
+                }
+
+                // Update frame rate
+                const frameRateEl = document.getElementById('frameRate');
+                if (metrics.frameRate) {
+                    const fps = Math.round(metrics.frameRate);
+                    frameRateEl.textContent = `${fps} fps`;
+                    frameRateEl.parentElement.className = fps > 25 ? 'metric good' : fps > 15 ? 'metric warning' : 'metric error';
+                }
+
+                // Update render time
+                const renderTimeEl = document.getElementById('renderTime');
+                if (metrics.renderTime !== undefined) {
+                    const time = metrics.renderTime.toFixed(1);
+                    renderTimeEl.textContent = `${time}ms`;
+                    renderTimeEl.parentElement.className = time < 16 ? 'metric good' : time < 33 ? 'metric warning' : 'metric error';
+                }
+
+                // Update face detection time
+                const faceDetectionEl = document.getElementById('faceDetectionTime');
+                if (metrics.faceDetectionTime !== undefined) {
+                    const time = metrics.faceDetectionTime.toFixed(1);
+                    faceDetectionEl.textContent = `${time}ms`;
+                    faceDetectionEl.parentElement.className = time < 66 ? 'metric good' : time < 100 ? 'metric warning' : 'metric error';
+                }
+
+                // Update memory usage
+                const memoryEl = document.getElementById('memoryUsage');
+                if (metrics.memoryUsage) {
+                    const used = metrics.memoryUsage.used;
+                    const limit = metrics.memoryUsage.limit;
+                    const percentage = (used / limit * 100).toFixed(1);
+                    memoryEl.textContent = `${used}MB (${percentage}%)`;
+                    memoryEl.parentElement.className = percentage < 60 ? 'metric good' : percentage < 80 ? 'metric warning' : 'metric error';
+                }
+
+                // Update device class
+                const deviceEl = document.getElementById('deviceClass');
+                if (device.deviceClass) {
+                    deviceEl.textContent = device.deviceClass.charAt(0).toUpperCase() + device.deviceClass.slice(1);
+                    deviceEl.parentElement.className = device.deviceClass === 'high' ? 'metric good' : device.deviceClass === 'medium' ? 'metric warning' : 'metric error';
+                }
+
+                // Update overall rating
+                const ratingEl = document.getElementById('overallRating');
+                const overall = performanceData.monitor.summary.overallRating;
+                if (overall) {
+                    ratingEl.textContent = `${overall.rating} (${overall.score}/100)`;
+                    ratingEl.parentElement.className = overall.score > 80 ? 'metric good' : overall.score > 60 ? 'metric warning' : 'metric error';
+                }
+
+                // Update suggestions
+                this.updateSuggestions(performanceData.monitor.suggestions || []);
+            }
+
+            updateSuggestions(suggestions) {
+                const suggestionsEl = document.getElementById('suggestions');
+                const listEl = document.getElementById('suggestionsList');
+
+                if (suggestions.length === 0) {
+                    suggestionsEl.style.display = 'none';
+                    return;
+                }
+
+                suggestionsEl.style.display = 'block';
+                listEl.innerHTML = '';
+
+                suggestions.forEach(suggestion => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${suggestion.issue}:</strong> ${suggestion.suggestion}`;
+                    listEl.appendChild(li);
+                });
+            }
+
+            generateFullReport() {
+                if (!this.app || !this.app.performanceMonitor) {
+                    alert('Performance monitoring not available');
+                    return;
+                }
+
+                const report = this.app.performanceMonitor.generateReport();
+                
+                // Create a formatted report window
+                const reportWindow = window.open('', '_blank', 'width=800,height=600');
+                reportWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>Performance Report</title>
+                            <style>
+                                body { font-family: monospace; margin: 20px; background: #f0f0f0; }
+                                .report { background: white; padding: 20px; border-radius: 10px; }
+                                .section { margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 5px; }
+                                .metric { margin: 5px 0; }
+                                .good { color: #4caf50; }
+                                .warning { color: #ff9800; }
+                                .error { color: #f44336; }
+                                pre { background: #f5f5f5; padding: 10px; border-radius: 3px; overflow-x: auto; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="report">
+                                <h1>📊 Fun House Photo Booth - Performance Report</h1>
+                                <p><strong>Generated:</strong> ${new Date().toLocaleString()}</p>
+                                
+                                <div class="section">
+                                    <h2>Overall Performance</h2>
+                                    <p><strong>Rating:</strong> ${report.summary.overallRating.rating} (${report.summary.overallRating.score}/100)</p>
+                                    <div class="metric">Startup Time: ${(report.startup.totalStartupTime || 0).toFixed(0)}ms</div>
+                                    <div class="metric">Frame Rate: ${Math.round(report.runtime.frameRate || 0)} fps</div>
+                                    <div class="metric">Memory Usage: ${report.runtime.memoryUsage ? report.runtime.memoryUsage.used + 'MB' : 'N/A'}</div>
+                                </div>
+                                
+                                <div class="section">
+                                    <h2>Device Information</h2>
+                                    <div class="metric">Device Class: ${report.device.deviceClass}</div>
+                                    <div class="metric">CPU Cores: ${report.device.metrics.cores}</div>
+                                    <div class="metric">Memory Limit: ${Math.round(report.device.metrics.memory)}MB</div>
+                                </div>
+                                
+                                ${report.suggestions.length > 0 ? `
+                                <div class="section">
+                                    <h2>Optimization Suggestions</h2>
+                                    ${report.suggestions.map(s => 
+                                        `<div class="metric ${s.priority === 'high' ? 'error' : 'warning'}">
+                                            ${s.issue}: ${s.suggestion}
+                                        </div>`
+                                    ).join('')}
+                                </div>` : ''}
+                                
+                                <div class="section">
+                                    <h2>Raw Data</h2>
+                                    <pre>${JSON.stringify(report, null, 2)}</pre>
+                                </div>
+                            </div>
+                        </body>
+                    </html>
+                `);
+            }
+        }
+
+        // Initialize performance test interface
+        new PerformanceTestInterface();
+    </script>
+</body>
+</html>
