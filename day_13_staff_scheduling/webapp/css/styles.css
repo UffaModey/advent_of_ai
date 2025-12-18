@@ -1,0 +1,292 @@
+/* Festival Staff Scheduler Styles */
+
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #64748b;
+    --success-color: #059669;
+    --warning-color: #d97706;
+    --danger-color: #dc2626;
+    --info-color: #0891b2;
+    --light-color: #f8fafc;
+    --dark-color: #1e293b;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light-color);
+}
+
+/* Staff Color Coding */
+.staff-marcus { background-color: #ef4444; border-color: #dc2626; }
+.staff-elena { background-color: #f97316; border-color: #ea580c; }
+.staff-sarah { background-color: #eab308; border-color: #ca8a04; }
+.staff-david { background-color: #22c55e; border-color: #16a34a; }
+.staff-lisa { background-color: #06b6d4; border-color: #0891b2; }
+.staff-tom { background-color: #3b82f6; border-color: #2563eb; }
+.staff-emma { background-color: #8b5cf6; border-color: #7c3aed; }
+.staff-jake { background-color: #ec4899; border-color: #db2777; }
+
+/* Calendar Customizations */
+.fc-event {
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.fc-event-title {
+    font-weight: 600;
+}
+
+.fc-toolbar {
+    margin-bottom: 1rem !important;
+}
+
+.fc-toolbar-title {
+    font-size: 1.5rem !important;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+/* Staff Cards */
+.staff-card {
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 1rem;
+}
+
+.staff-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.staff-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--info-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+.staff-info h6 {
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.staff-role {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.staff-availability {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+}
+
+.contact-info {
+    font-size: 0.8rem;
+}
+
+.contact-info i {
+    width: 16px;
+    color: var(--secondary-color);
+}
+
+/* Legend */
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.legend-label {
+    font-size: 0.9rem;
+    color: var(--dark-color);
+}
+
+/* Individual Schedule */
+.schedule-day {
+    border-left: 4px solid var(--primary-color);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: white;
+    border-radius: 0 8px 8px 0;
+}
+
+.schedule-time {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.schedule-notes {
+    color: var(--secondary-color);
+    font-style: italic;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+}
+
+/* Backup Coverage */
+.backup-section {
+    margin-bottom: 2rem;
+}
+
+.backup-role-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--info-color));
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px 8px 0 0;
+    font-weight: 600;
+}
+
+.backup-assignments {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 1rem;
+}
+
+.backup-item {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.backup-item:last-child {
+    border-bottom: none;
+}
+
+.backup-primary {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.backup-secondary {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white !important;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    .print-only {
+        display: block !important;
+    }
+    
+    .card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+    }
+    
+    .staff-card {
+        margin-bottom: 1rem;
+        page-break-inside: avoid;
+    }
+    
+    .fc-event {
+        color: black !important;
+        border: 1px solid #333 !important;
+    }
+    
+    .schedule-day {
+        border-left: 2px solid #333 !important;
+        margin-bottom: 0.5rem;
+        page-break-inside: avoid;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .staff-avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .staff-info h6 {
+        font-size: 0.9rem;
+    }
+    
+    .fc-toolbar {
+        flex-direction: column;
+    }
+    
+    .fc-toolbar-chunk {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Status Indicators */
+.status-available {
+    color: var(--success-color);
+}
+
+.status-busy {
+    color: var(--danger-color);
+}
+
+.status-break {
+    color: var(--warning-color);
+}
+
+/* Quick Stats */
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    margin-bottom: 1rem;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
