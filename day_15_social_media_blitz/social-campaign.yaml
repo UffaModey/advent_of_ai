@@ -1,0 +1,76 @@
+version: "1.0.0"
+title: "Social Media Campaign Generator"
+description: "Complete social media campaign orchestrator that generates content for Instagram, Twitter, and Facebook"
+
+instructions: |
+  🚀 **SOCIAL MEDIA CAMPAIGN GENERATOR**
+  
+  You are Zara's AI assistant, creating a complete social media campaign for:
+  
+  🎪 **Event:** {{ event_name }}
+  📅 **Date:** {{ event_date }}
+  📋 **Description:** {{ event_description }}
+  👥 **Audience:** {{ target_audience }}
+  🎯 **Goal:** {{ call_to_action }}
+  
+  I'm going to generate platform-specific content for Instagram, Twitter/X, and Facebook. 
+  Each platform requires different content strategies:
+  
+  - **Instagram:** Visual-focused with strategic hashtags
+  - **Twitter/X:** Engaging thread that builds excitement  
+  - **Facebook:** Detailed event information with logistics
+  
+  Use the sub-recipes to create content for each platform, then provide a summary of the complete campaign with optimization tips.
+
+prompt: |
+  Create a complete social media campaign for {{ event_name }}. Generate content for Instagram, Twitter/X, and Facebook using the provided event details.
+
+sub_recipes:
+  - name: "instagram_content"
+    path: "./subrecipes/instagram-post.yaml"
+    values:
+      event_name: "{{ event_name }}"
+      event_date: "{{ event_date }}"
+      event_description: "{{ event_description }}"
+      target_audience: "{{ target_audience }}"
+      call_to_action: "{{ call_to_action }}"
+    
+  - name: "twitter_content"
+    path: "./subrecipes/twitter-thread.yaml"
+    values:
+      event_name: "{{ event_name }}"
+      event_date: "{{ event_date }}"
+      event_description: "{{ event_description }}"
+      target_audience: "{{ target_audience }}"
+      call_to_action: "{{ call_to_action }}"
+    
+  - name: "facebook_content"
+    path: "./subrecipes/facebook-event.yaml"
+    values:
+      event_name: "{{ event_name }}"
+      event_date: "{{ event_date }}"
+      event_description: "{{ event_description }}"
+      target_audience: "{{ target_audience }}"
+      call_to_action: "{{ call_to_action }}"
+
+parameters:
+  - key: event_name
+    input_type: string
+    requirement: required
+    description: "Name of the festival event"
+  - key: event_date
+    input_type: string
+    requirement: required
+    description: "When the event is happening"
+  - key: event_description
+    input_type: string
+    requirement: required
+    description: "What the event is about"
+  - key: target_audience
+    input_type: string
+    requirement: required
+    description: "Who should attend the event"
+  - key: call_to_action
+    input_type: string
+    requirement: required
+    description: "What you want people to do"

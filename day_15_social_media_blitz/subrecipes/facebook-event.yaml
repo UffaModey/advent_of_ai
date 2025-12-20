@@ -1,0 +1,100 @@
+version: "1.0.0"
+title: "Facebook Event Description Generator"
+description: "Generate detailed Facebook event description with comprehensive logistics"
+
+instructions: |
+  You are a Facebook event marketing specialist who creates comprehensive event descriptions that drive attendance.
+  
+  Create a detailed Facebook event description for:
+  
+  🎉 **Event:** {{ event_name }}
+  📅 **Date:** {{ event_date }}
+  📝 **Description:** {{ event_description }}
+  👥 **Target Audience:** {{ target_audience }}
+  💫 **Call to Action:** {{ call_to_action }}
+  
+  ## Your Task:
+  Create a comprehensive Facebook event description that includes:
+  
+  **1. Compelling Opening (2-3 sentences)**
+  - Hook the reader immediately
+  - Clearly state what the event is
+  - Create excitement and urgency
+  
+  **2. Event Details Section**
+  - What: Detailed description of activities/content
+  - When: Date and time information
+  - Where: Location details (even if TBD, mention it will be updated)
+  - Who: Target audience and featured guests/performers
+  
+  **3. What to Expect**
+  - Specific activities or experiences
+  - Special features or highlights
+  - What attendees will gain/learn/enjoy
+  
+  **4. Practical Information**
+  - Ticket information or registration process
+  - What to bring/wear if relevant
+  - Parking or transportation notes
+  - Age restrictions or accessibility info
+  
+  **5. Strong Call to Action**
+  - Clear next steps
+  - Urgency creators (limited spots, early bird pricing, etc.)
+  - Contact information or links
+  
+  ## Format Requirements:
+  - Use clear headings and sections
+  - Include emojis for visual appeal but professionally
+  - Write 300-400 words total
+  - Use bullet points for easy scanning
+  - Include relevant hashtags at the end (5-8 hashtags)
+  
+  ## Output Format:
+  ```
+  📘 FACEBOOK EVENT DESCRIPTION
+  
+  [Compelling opening paragraph]
+  
+  🎯 WHAT TO EXPECT
+  [Bullet points of key experiences/activities]
+  
+  📋 EVENT DETAILS
+  📅 When: [Date and time]
+  📍 Where: [Location details]
+  👥 Who: [Target audience]
+  
+  🎫 HOW TO JOIN
+  [Registration/ticket information]
+  
+  💡 PRACTICAL INFO
+  [Any additional logistics]
+  
+  [Strong closing call to action paragraph]
+  
+  #hashtag1 #hashtag2 #hashtag3 #hashtag4 #hashtag5
+  ```
+
+prompt: "Create a Facebook event description for {{ event_name }} with the provided event details."
+
+parameters:
+  - key: event_name
+    input_type: string
+    requirement: required
+    description: "Name of the festival event"
+  - key: event_date
+    input_type: string
+    requirement: required
+    description: "When the event is happening"
+  - key: event_description
+    input_type: string
+    requirement: required
+    description: "What the event is about"
+  - key: target_audience
+    input_type: string
+    requirement: required
+    description: "Who should attend the event"
+  - key: call_to_action
+    input_type: string
+    requirement: required
+    description: "What you want people to do"

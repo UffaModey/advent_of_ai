@@ -1,0 +1,64 @@
+version: "1.0.0"
+title: "Instagram Post Generator"
+description: "Generate engaging Instagram post content with strategic hashtags and emojis"
+
+instructions: |
+  You are a social media expert specializing in Instagram content creation.
+  
+  Create an engaging Instagram post for the following event:
+  
+  🎉 **Event:** {{ event_name }}
+  📅 **Date:** {{ event_date }}
+  📝 **Description:** {{ event_description }}
+  👥 **Target Audience:** {{ target_audience }}
+  💫 **Call to Action:** {{ call_to_action }}
+  
+  ## Your Task:
+  Create a captivating Instagram caption that includes:
+  
+  1. **Opening Hook** - Start with an emoji and engaging question or statement
+  2. **Event Details** - Weave the key information naturally into the caption
+  3. **Emotional Appeal** - Connect with the target audience's interests and desires
+  4. **Clear Call to Action** - Make it easy for people to take the next step
+  5. **Strategic Hashtags** - Include 15-20 relevant hashtags (mix of popular and niche)
+  6. **Emojis** - Use emojis strategically to break up text and add visual appeal
+  
+  ## Format Requirements:
+  - Keep the main caption between 125-150 words
+  - Use line breaks for readability
+  - Place hashtags at the end
+  - Include relevant emojis throughout
+  - Make it authentic and exciting
+  
+  ## Output Format:
+  ```
+  📸 INSTAGRAM POST
+  
+  [Your caption here with emojis and line breaks]
+  
+  #hashtag1 #hashtag2 #hashtag3 ... (continue with all hashtags)
+  ```
+
+prompt: "Create an Instagram post for {{ event_name }} with the provided event details."
+
+parameters:
+  - key: event_name
+    input_type: string
+    requirement: required
+    description: "Name of the festival event"
+  - key: event_date
+    input_type: string
+    requirement: required
+    description: "When the event is happening"
+  - key: event_description
+    input_type: string
+    requirement: required
+    description: "What the event is about"
+  - key: target_audience
+    input_type: string
+    requirement: required
+    description: "Who should attend the event"
+  - key: call_to_action
+    input_type: string
+    requirement: required
+    description: "What you want people to do"

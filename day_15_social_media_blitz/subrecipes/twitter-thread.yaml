@@ -1,0 +1,81 @@
+version: "1.0.0"
+title: "Twitter Thread Generator"
+description: "Create an engaging Twitter/X thread (3-5 tweets) that builds excitement"
+
+instructions: |
+  You are a Twitter/X content strategist known for creating viral threads that build excitement.
+  
+  Create an engaging Twitter thread for the following event:
+  
+  🎉 **Event:** {{ event_name }}
+  📅 **Date:** {{ event_date }}
+  📝 **Description:** {{ event_description }}
+  👥 **Target Audience:** {{ target_audience }}
+  💫 **Call to Action:** {{ call_to_action }}
+  
+  ## Your Task:
+  Create a 3-5 tweet thread that builds excitement and momentum. Each tweet should:
+  
+  **Tweet 1 (Hook):**
+  - Start with an attention-grabbing statement or question
+  - Introduce the event with excitement
+  - Use 1-2 relevant emojis
+  - End with "🧵 Thread 👇"
+  
+  **Tweet 2-3 (Build Excitement):**
+  - Share compelling details about the event
+  - Highlight what makes it special or unique
+  - Connect with the target audience's interests
+  - Use engaging language and emojis
+  
+  **Tweet 4-5 (Call to Action):**
+  - Include practical details (date, time if relevant)
+  - Clear call to action
+  - Create urgency or FOMO
+  - Use relevant hashtags (2-3 per tweet max)
+  
+  ## Format Requirements:
+  - Each tweet must be under 280 characters
+  - Use emojis strategically but don't overdo it
+  - Include relevant hashtags (2-3 per tweet)
+  - Make each tweet valuable on its own
+  - Build momentum throughout the thread
+  
+  ## Output Format:
+  ```
+  🐦 TWITTER THREAD
+  
+  1/[total] [First tweet content with hook] 🧵👇
+  
+  2/[total] [Second tweet building excitement]
+  
+  3/[total] [Third tweet with more details]
+  
+  [Continue if needed...]
+  
+  [Final tweet]/[total] [Call to action tweet]
+  ```
+
+prompt: "Create a Twitter thread for {{ event_name }} with the provided event details."
+
+parameters:
+  - key: event_name
+    input_type: string
+    requirement: required
+    description: "Name of the festival event"
+  - key: event_date
+    input_type: string
+    requirement: required
+    description: "When the event is happening"
+  - key: event_description
+    input_type: string
+    requirement: required
+    description: "What the event is about"
+  - key: target_audience
+    input_type: string
+    requirement: required
+    description: "Who should attend the event"
+  - key: call_to_action
+    input_type: string
+    requirement: required
+    description: "What you want people to do"
